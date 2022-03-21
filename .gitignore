@@ -48,3 +48,14 @@ Thumbs.db
 *.mov
 *.wmv
 
+/.vs
+/InterviewHelper.API/obj
+/InterviewHelper.API/bin
+/InterviewHelper.DataAccess/obj
+/InterviewHelper.DataAccess/bin
+/InterviewHelper.Infrastructure/obj
+/InterviewHelper.Infrastructure/bin
+/InterviewHelper.Services/obj
+/InterviewHelper.Services/bin
+/InterviewHelper.Core/obj
+/InterviewHelper.Core/bin
