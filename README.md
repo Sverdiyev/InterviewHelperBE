@@ -1,2 +1,3 @@
-##developers
-Tomasz Wójcik tpjwojcik@gmail.com
+##Developers
+Abdallah Serghine - ab.serghine@gmail.com
+Tomasz Wojcik tpjwojcik@gmail.com
