@@ -8,9 +8,9 @@ public class QuestionRepository: IQuestionRepository
 {
     private readonly QuestionFactory _factory;
 
-    public QuestionRepository()
+    public QuestionRepository(QuestionFactory factory)
     {
-        _factory = new QuestionFactory();
+        _factory = factory;
     }
     public IEnumerable<Question> GetAllQuestions()
     {
