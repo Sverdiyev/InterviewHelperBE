@@ -1,7 +1,5 @@
 using System.Net;
 using InterviewHelper.Core.ServiceContracts;
-using InterviewHelper.DataAccess.Repositories;
-using InterviewHelper.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewHelper.Controllers
