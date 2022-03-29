@@ -16,11 +16,12 @@ public class QuestionRepository: IQuestionRepository
     }
     public IEnumerable<Question> GetAllQuestions()
     {
-        var creationTimeStamp = new DateTime(2022, 3, 29);
+        var creationTimeStamp = new DateTime(2022, 3, 29, 10,30, 30);
 
         for (var i = 0; i < 50; i++)
         {
-            _questions.Add(_factory.GenerateQuestion(i+1, creationTimeStamp.AddDays(1)));
+            creationTimeStamp = creationTimeStamp.AddHours(6);
+            _questions.Add(_factory.GenerateQuestion(i+1, creationTimeStamp));
         }
 
         return _questions;
