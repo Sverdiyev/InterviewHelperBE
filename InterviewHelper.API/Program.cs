@@ -3,6 +3,15 @@ using InterviewHelper.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:3000");
+        });
+}); // cors enabling
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -13,6 +22,8 @@ builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 
 
 var app = builder.Build();
+
+app.UseCors(); // cors enabling
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
