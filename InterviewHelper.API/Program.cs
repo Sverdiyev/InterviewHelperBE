@@ -8,7 +8,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         builder =>
         {
-            builder.WithOrigins("http://localhost:3000");
+            builder.WithOrigins("http://localhost:3000"); // frontend origin
         });
 }); // cors enabling
 
@@ -19,8 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
-builder.Services.AddScoped<QuestionFactory>();
-
+builder.Services.AddScoped<MockQuestionFactory>();
 
 var app = builder.Build();
 

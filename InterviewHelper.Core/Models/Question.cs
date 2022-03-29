@@ -9,16 +9,5 @@ namespace InterviewHelper.Models
         public string? Note { get; set; }
         public int Vote { get; set; }
         public List<string>? Tags {get; set; }
-
-        public Question(int id, DateTime creationDate, string complexity, string questionContent, string? note, int vote, List<string>? tags)
-        {
-            Id = id;
-            CreationDate = creationDate;
-            Complexity = complexity;
-            QuestionContent = questionContent;
-            Note = note;
-            Vote = vote;
-            Tags = tags;
-        }
     }
 }

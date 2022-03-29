@@ -3,7 +3,7 @@ using InterviewHelper.Models;
 
 namespace InterviewHelper.DataAccess.Repositories;
 
-public class QuestionFactory
+public class MockQuestionFactory
 {
     private readonly Random _random = new Random();
     private readonly string[] _questionsContent = new string[]
@@ -39,7 +39,6 @@ public class QuestionFactory
 
     public Question GenerateQuestion(int id, DateTime timeStamp)
     {
-        
         var questionContent = this._questionsContent[_random.Next(this._questionsContent.Length)] ;
         var note = this._notes[_random.Next(this._notes.Length)];
         var complexity = this._complexity[_random.Next(this._complexity.Length)];
@@ -50,6 +49,15 @@ public class QuestionFactory
             this._tags[_random.Next(this._tags.Length-1)],
         };
 
-        return new Question(id, timeStamp, complexity, questionContent, note, vote, tags);
+        return new Question
+        {
+            Id = id, 
+            CreationDate = timeStamp, 
+            Complexity = complexity, 
+            QuestionContent = questionContent, 
+            Note = note, 
+            Vote = vote, 
+            Tags = tags
+        };
     }
 }

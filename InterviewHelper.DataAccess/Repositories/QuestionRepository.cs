@@ -6,9 +6,9 @@ namespace InterviewHelper.DataAccess.Repositories;
 
 public class QuestionRepository: IQuestionRepository
 {
-    private readonly QuestionFactory _factory;
+    private readonly MockQuestionFactory _factory;
 
-    public QuestionRepository(QuestionFactory factory)
+    public QuestionRepository(MockQuestionFactory factory)
     {
         _factory = factory;
     }
