@@ -1,3 +1,4 @@
+using System.Net;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.DataAccess.Repositories;
 using InterviewHelper.Models;
@@ -19,9 +20,15 @@ namespace InterviewHelper.Controllers
         }
 
         [HttpGet(Name = "GetAllQuestions")]
-        public IEnumerable<Question> Get()
+        public IActionResult Get()
         {
-            return _questionRepository.GetAllQuestions();
+            try {
+                return Ok(_questionRepository.GetAllQuestions());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
     }
 }
