@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using InterviewHelper.Models;
+﻿using InterviewHelper.Models;
 
 namespace InterviewHelper.DataAccess.Repositories;
 

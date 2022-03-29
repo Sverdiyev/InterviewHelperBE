@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using InterviewHelper.Core.ServiceContracts;
+﻿using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.Models;
 
 namespace InterviewHelper.DataAccess.Repositories;
