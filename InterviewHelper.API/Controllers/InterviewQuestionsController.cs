@@ -22,7 +22,8 @@ namespace InterviewHelper.Controllers
         [HttpGet(Name = "GetAllQuestions")]
         public IActionResult Get()
         {
-            try {
+            try 
+            {
                 return Ok(_questionRepository.GetAllQuestions());
             }
             catch (Exception ex)
