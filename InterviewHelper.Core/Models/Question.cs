@@ -6,6 +6,6 @@ namespace InterviewHelper.Models
         public DateTime CreationDate { get; set; }
         public string? Language  { get; set; }
         public int Complexity { get; set; }
-        public string Contetnt { get; set; }
+        public string Content { get; set; }
     }
 }

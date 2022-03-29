@@ -28,7 +28,7 @@ namespace InterviewHelper.Controllers
                 CreationDate = DateTime.Now.AddDays(index),
                 Complexity = 0,
                 Language = ProgrammingLanguages[index],
-                Contetnt = $"This question is about '{ProgrammingLanguages[index]}' programming language!"
+                Content = $"This question is about '{ProgrammingLanguages[index]}' programming language!"
             })
             .ToArray();
         }
