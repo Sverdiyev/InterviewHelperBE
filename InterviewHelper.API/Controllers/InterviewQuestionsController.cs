@@ -1,4 +1,5 @@
-using InterviewHelper.Models;
+using System.Net;
+using InterviewHelper.Core.ServiceContracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewHelper.Controllers
@@ -7,30 +8,26 @@ namespace InterviewHelper.Controllers
     [Route("[controller]")]
     public class InterviewQuestionsController : ControllerBase
     {
-        private static readonly string[] ProgrammingLanguages = new[]
-        {
-            "C#", "Java", "Javascript", "C++", "Python", "Go"
-        };
-
+        private readonly IQuestionRepository _questionRepository;
         private readonly ILogger<InterviewQuestionsController> _logger;
 
-        public InterviewQuestionsController(ILogger<InterviewQuestionsController> logger)
+        public InterviewQuestionsController(IQuestionRepository questionRepository, ILogger<InterviewQuestionsController> logger)
         {
+            _questionRepository = questionRepository;
             _logger = logger;
         }
 
         [HttpGet(Name = "GetAllQuestions")]
-        public IEnumerable<Question> Get()
+        public IActionResult Get()
         {
-            return Enumerable.Range(0, 4).Select(index => new Question
+            try 
             {
-                Id = index,
-                CreationDate = DateTime.Now.AddDays(index),
-                Complexity = 0,
-                Language = ProgrammingLanguages[index],
-                Content = $"This question is about '{ProgrammingLanguages[index]}' programming language!"
-            })
-            .ToArray();
+                return Ok(_questionRepository.GetAllQuestions());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
     }
 }
