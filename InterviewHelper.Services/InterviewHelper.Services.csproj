@@ -11,4 +11,9 @@
     <ProjectReference Include="..\InterviewHelper.DataAccess\InterviewHelper.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Microsoft.EntityFrameworkCore.Sqlite" />
+    <None Remove="Microsoft.EntityFrameworkCore.Design" />
+    <None Remove="Microsoft.EntityFrameworkCore.Tools" />
+  </ItemGroup>
 </Project>
