@@ -12,7 +12,6 @@ namespace InterviewHelper.Api.Controllers
     {
         private readonly IQuestionRepository _questionRepository;
         private readonly ILogger<QuestionsController> _logger;
-        private readonly AppDbContext _dbContext;
 
 
         public QuestionsController(IQuestionRepository questionRepository,
@@ -20,7 +19,6 @@ namespace InterviewHelper.Api.Controllers
         {
             _questionRepository = questionRepository;
             _logger = logger;
-            _dbContext = new AppDbContext();
         }
 
         [HttpGet("allQuestions")]
@@ -40,17 +38,22 @@ namespace InterviewHelper.Api.Controllers
         [HttpGet("user")]
         public ActionResult<List<AppUser>> GetUser()
         {
-            return Ok(_dbContext.AppUsers.ToArray());
+            using (var dbContext = new AppDbContext())
+            {
+                return Ok(dbContext.AppUsers.ToArray());
+            }
         }
 
         [HttpPost("user")]
         public ActionResult PostAddUser()
         {
-            //functionality, validation to be added in a separate PR
-
-            _dbContext.Add(new AppUser()
-                {Email = "sasha.verdiyev", Name = "Sasha", Rating = 100, Password = "password"});
-            _dbContext.SaveChanges();
+            using (var dbContext = new AppDbContext())
+            {
+                //functionality, data extraction, validation to be added in a separate PR
+                dbContext.Add(new AppUser()
+                    {Email = "sasha.verdiyev", Name = "Sasha", Rating = 100, Password = "password"});
+                dbContext.SaveChanges();
+            }
 
             return Ok();
         }
