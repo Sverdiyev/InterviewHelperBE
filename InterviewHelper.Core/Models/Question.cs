@@ -1,4 +1,6 @@
-namespace InterviewHelper.Models
+using System.ComponentModel.DataAnnotations;
+
+namespace InterviewHelper.Core.Models
 {
     public class Question
     {
@@ -8,6 +10,6 @@ namespace InterviewHelper.Models
         public string QuestionContent { get; set; }
         public string? Note { get; set; }
         public int Vote { get; set; }
-        public List<string>? Tags {get; set; }
+        public List<string>? Tags { get; set; }
     }
 }

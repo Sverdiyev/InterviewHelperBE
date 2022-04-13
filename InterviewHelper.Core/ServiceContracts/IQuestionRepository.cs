@@ -1,4 +1,4 @@
-﻿using InterviewHelper.Models;
+﻿using InterviewHelper.Core.Models;
 
 namespace InterviewHelper.Core.ServiceContracts
 {
