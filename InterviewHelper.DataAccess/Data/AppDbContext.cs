@@ -8,12 +8,18 @@ namespace InterviewHelper.DataAccess.Data
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string currentDirectory = Directory.GetCurrentDirectory();
-            string dbPath = Directory.GetParent(currentDirectory).ToString();
-            optionsBuilder.UseSqlite($"DataSource={dbPath}/InterviewHelper.DataAccess/Data/app.db");
-        }
-        
-        public DbSet<AppUser> AppUsers { get; set; }
+            {
+                string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
+                if (environment != "Production")
+                {
+                    string currentDirectory = Directory.GetCurrentDirectory();
+                    string dbPath = Directory.GetParent(currentDirectory).ToString();
+                    optionsBuilder.UseSqlite($"DataSource={dbPath}/InterviewHelper.DataAccess/Data/app.db");
+                }
+            }
+        }
+
+        public DbSet<AppUser> AppUsers { get; set; }
     }
 }
