@@ -1,19 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\InterviewHelper.Core\InterviewHelper.Core.csproj" />
-    <ProjectReference Include="..\InterviewHelper.DataAccess\InterviewHelper.DataAccess.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Microsoft.EntityFrameworkCore.Sqlite" />
-    <None Remove="Microsoft.EntityFrameworkCore.Design" />
-    <None Remove="Microsoft.EntityFrameworkCore.Tools" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\InterviewHelper.Core\InterviewHelper.Core.csproj"/>
+        <ProjectReference Include="..\InterviewHelper.DataAccess\InterviewHelper.DataAccess.csproj"/>
+    </ItemGroup>
 </Project>
