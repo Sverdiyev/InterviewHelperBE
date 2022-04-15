@@ -51,7 +51,7 @@ namespace InterviewHelper.Api.Controllers
             {
                 //functionality, data extraction, validation to be added in a separate PR
                 dbContext.Add(new AppUser()
-                    {Email = "sasha.verdiyev", Name = "Sasha", Rating = 100, Password = "password"});
+                    {Email = "sasha.verdiyev", Name = "Sasha", Password = "password"});
                 dbContext.SaveChanges();
             }
 

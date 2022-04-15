@@ -11,6 +11,7 @@ namespace InterviewHelper.DataAccess.Data
             {
                 string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
+
                 if (environment != "Production")
                 {
                     string currentDirectory = Directory.GetCurrentDirectory();
