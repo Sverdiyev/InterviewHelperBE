@@ -1,7 +1,5 @@
 using System.Net;
-using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
-using InterviewHelper.DataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewHelper.Api.Controllers
@@ -32,30 +30,6 @@ namespace InterviewHelper.Api.Controllers
             {
                 return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
-        }
-
-        //will need to be moved to a separate controller during separate PR 
-        [HttpGet("user")]
-        public ActionResult<List<AppUser>> GetUser()
-        {
-            using (var dbContext = new AppDbContext())
-            {
-                return Ok(dbContext.AppUsers.ToArray());
-            }
-        }
-
-        [HttpPost("user")]
-        public ActionResult PostAddUser()
-        {
-            using (var dbContext = new AppDbContext())
-            {
-                //functionality, data extraction, validation to be added in a separate PR
-                dbContext.Add(new AppUser()
-                    {Email = "sasha.verdiyev", Name = "Sasha", Password = "password"});
-                dbContext.SaveChanges();
-            }
-
-            return Ok();
         }
     }
 }
