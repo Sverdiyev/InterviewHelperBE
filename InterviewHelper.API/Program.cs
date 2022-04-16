@@ -21,6 +21,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<MockQuestionFactory>();
 
+// builder.Services.Configure<PositionOptions>(builder.Configuration.GetSection("sectionName"));
+
+
 var app = builder.Build();
 
 app.UseCors(); // cors enabling
@@ -31,6 +34,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
