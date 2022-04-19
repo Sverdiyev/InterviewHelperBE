@@ -59,7 +59,7 @@ public class MockQuestionFactory
             QuestionContent = questionContent,
             Note = note,
             Vote = vote,
-            Tags = tags
+            // Tags = tags
         };
     }
 }

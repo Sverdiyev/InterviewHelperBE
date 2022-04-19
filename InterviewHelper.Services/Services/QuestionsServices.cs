@@ -6,8 +6,8 @@ namespace InterviewHelper.Services.Services;
 
 public class QuestionsServices
 {
+    private readonly string _connectionString;
 
-    private readonly string _connectionString; 
     public QuestionsServices(IOptions<DBConfiguration> config)
     {
         _connectionString = config.Value.ConnectionString;
@@ -17,9 +17,7 @@ public class QuestionsServices
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            // context.Questions.Add()
-            
+            //add logic here
         }
-        
-    } 
+    }
 }

@@ -8,6 +8,7 @@ namespace InterviewHelper.Core.Models
         public string QuestionContent { get; set; }
         public string? Note { get; set; }
         public int Vote { get; set; }
-        public List<string>? Tags { get; set; }
+
+        // public List<string>? Tags { get; set; }
     }
 }
