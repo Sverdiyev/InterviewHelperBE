@@ -15,10 +15,5 @@
     <ProjectReference Include="..\InterviewHelper.Core\InterviewHelper.Core.csproj" />
     <ProjectReference Include="..\InterviewHelper.Services\InterviewHelper.Services.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Microsoft.EntityFrameworkCore.Sqlite" />
-    <None Remove="Microsoft.EntityFrameworkCore.Design" />
-    <None Remove="Microsoft.EntityFrameworkCore.Tools" />
-  </ItemGroup>
+  
 </Project>
