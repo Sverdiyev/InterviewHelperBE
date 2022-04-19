@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InterviewHelper.DataAccess.Migrations
 {
     [DbContext(typeof(InterviewHelperContext))]
-    [Migration("20220419211115_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220419215518_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
