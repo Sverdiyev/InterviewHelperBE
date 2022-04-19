@@ -6,10 +6,9 @@ public static class InitializationService
 {
     public static void Init(string connectionString)
     {
-        using (var context = new InterviewHelperContext())
+        using (var context = new InterviewHelperContext(connectionString))
         {
             context.Init();
         }
     }
-    
 }
