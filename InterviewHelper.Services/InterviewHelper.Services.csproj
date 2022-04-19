@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\InterviewHelper.Core\InterviewHelper.Core.csproj"/>
-        <ProjectReference Include="..\InterviewHelper.DataAccess\InterviewHelper.DataAccess.csproj"/>
+        <ProjectReference Include="..\InterviewHelper.Core\InterviewHelper.Core.csproj" />
+        <ProjectReference Include="..\InterviewHelper.DataAccess\InterviewHelper.DataAccess.csproj" />
     </ItemGroup>
 </Project>

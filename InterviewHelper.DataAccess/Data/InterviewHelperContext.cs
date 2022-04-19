@@ -10,8 +10,9 @@ namespace InterviewHelper.DataAccess.Data
 
         public InterviewHelperContext()
         {
-            string currentDirectory = Directory.GetCurrentDirectory();
+            string currentDirectory = Directory.GetCurrentDirectory(); //API
             string dbPath = Directory.GetParent(currentDirectory).ToString();
+            //check relative path 
             _connectionString = $"DataSource={dbPath}/InterviewHelper.DataAccess/Data/app.db";
         }
 

@@ -1,5 +1,7 @@
+using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.DataAccess.Repositories;
+using InterviewHelper.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,9 +22,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<MockQuestionFactory>();
-
+builder.Services.Configure<DBConfiguration>(builder.Configuration.GetSection("Database"));
 // builder.Services.Configure<PositionOptions>(builder.Configuration.GetSection("sectionName"));
 
+InitializationService.Init(builder.Configuration.GetValue<string>("Database:ConnectionString"));
 
 var app = builder.Build();
 
