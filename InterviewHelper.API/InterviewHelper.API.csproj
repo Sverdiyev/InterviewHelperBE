@@ -15,5 +15,5 @@
     <ProjectReference Include="..\InterviewHelper.Core\InterviewHelper.Core.csproj" />
     <ProjectReference Include="..\InterviewHelper.Services\InterviewHelper.Services.csproj" />
   </ItemGroup>
-  
+
 </Project>

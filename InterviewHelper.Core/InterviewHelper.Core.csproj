@@ -12,11 +12,5 @@
     <Folder Include="Extentions\" />
     <Folder Include="ServiceContracts\" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Microsoft.EntityFrameworkCore.Sqlite" />
-    <None Remove="Data\" />
-    <None Remove="Microsoft.EntityFrameworkCore.Design" />
-    <None Remove="Microsoft.EntityFrameworkCore.Tools" />
-  </ItemGroup>
+  
 </Project>
