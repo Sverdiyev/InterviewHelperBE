@@ -12,5 +12,5 @@
     <Folder Include="Extentions\" />
     <Folder Include="ServiceContracts\" />
   </ItemGroup>
-  
+
 </Project>

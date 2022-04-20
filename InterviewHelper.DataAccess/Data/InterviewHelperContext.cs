@@ -1,7 +1,6 @@
 ﻿using InterviewHelper.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace InterviewHelper.DataAccess.Data
 {
     public class InterviewHelperContext : DbContext
