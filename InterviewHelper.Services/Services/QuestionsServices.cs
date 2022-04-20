@@ -15,9 +15,6 @@ public class QuestionsServices
 
     public void AddQuestion()
     {
-        using (var context = new InterviewHelperContext(_connectionString))
-        {
-            //add logic here
-        }
+        throw new NotImplementedException();
     }
 }
