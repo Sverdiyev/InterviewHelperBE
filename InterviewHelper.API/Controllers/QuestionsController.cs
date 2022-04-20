@@ -2,31 +2,33 @@ using System.Net;
 using InterviewHelper.Core.ServiceContracts;
 using Microsoft.AspNetCore.Mvc;
 
-namespace InterviewHelper.Controllers
+namespace InterviewHelper.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class InterviewQuestionsController : ControllerBase
+    public class QuestionsController : ControllerBase
     {
         private readonly IQuestionRepository _questionRepository;
-        private readonly ILogger<InterviewQuestionsController> _logger;
+        private readonly ILogger<QuestionsController> _logger;
 
-        public InterviewQuestionsController(IQuestionRepository questionRepository, ILogger<InterviewQuestionsController> logger)
+
+        public QuestionsController(IQuestionRepository questionRepository,
+            ILogger<QuestionsController> logger)
         {
             _questionRepository = questionRepository;
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetAllQuestions")]
+        [HttpGet("allQuestions")]
         public IActionResult Get()
         {
-            try 
+            try
             {
                 return Ok(_questionRepository.GetAllQuestions());
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
         }
     }

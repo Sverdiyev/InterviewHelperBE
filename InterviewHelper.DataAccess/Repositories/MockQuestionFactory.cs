@@ -1,10 +1,11 @@
-﻿using InterviewHelper.Models;
+﻿using InterviewHelper.Core.Models;
 
 namespace InterviewHelper.DataAccess.Repositories;
 
 public class MockQuestionFactory
 {
     private readonly Random _random = new Random();
+
     private readonly string[] _questionsContent = new string[]
     {
         "what is your understanding of low level programming languages?",
@@ -34,29 +35,31 @@ public class MockQuestionFactory
 
     private readonly string[] _complexity = new string[] {"hard", "medium", "easy"};
     private readonly int[] _votes = new int[] {90, -20, 80, 20, -19};
-    private readonly string[] _tags = new string[] {"c++", "python", "java", "OOP", "memory management", "data structures", "frontend", "backend"};
+
+    private readonly string[] _tags = new string[]
+        {"c++", "python", "java", "OOP", "memory management", "data structures", "frontend", "backend"};
 
     public Question GenerateQuestion(int id, DateTime timeStamp)
     {
-        var questionContent = this._questionsContent[_random.Next(this._questionsContent.Length)] ;
+        var questionContent = this._questionsContent[_random.Next(this._questionsContent.Length)];
         var note = this._notes[_random.Next(this._notes.Length)];
         var complexity = this._complexity[_random.Next(this._complexity.Length)];
         var vote = this._votes[_random.Next(this._votes.Length)];
         var tags = new List<string>()
         {
             this._tags[_random.Next(this._tags.Length)],
-            this._tags[_random.Next(this._tags.Length-1)],
+            this._tags[_random.Next(this._tags.Length - 1)],
         };
 
         return new Question
         {
-            Id = id, 
-            CreationDate = timeStamp, 
-            Complexity = complexity, 
-            QuestionContent = questionContent, 
-            Note = note, 
-            Vote = vote, 
-            Tags = tags
+            Id = id,
+            CreationDate = timeStamp,
+            Complexity = complexity,
+            QuestionContent = questionContent,
+            Note = note,
+            Vote = vote,
+            // Tags = tags
         };
     }
 }
