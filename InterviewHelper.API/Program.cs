@@ -23,7 +23,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<MockQuestionFactory>();
 builder.Services.Configure<DBConfiguration>(builder.Configuration.GetSection("Database"));
-// builder.Services.Configure<PositionOptions>(builder.Configuration.GetSection("sectionName"));
 
 InitializationService.Init(builder.Configuration.GetValue<string>("Database:ConnectionString"));
 
