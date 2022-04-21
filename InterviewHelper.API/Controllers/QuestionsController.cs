@@ -22,21 +22,14 @@ namespace InterviewHelper.Api.Controllers
             _questionsServices = questionsServices;
         }
 
-        [HttpGet("allQuestions")]
-        public IActionResult Get()
+        [HttpGet]
+        public IActionResult GetAllQuestions()
         {
-            try
-            {
-                return Ok(_questionRepository.GetAllQuestions());
-            }
-            catch (Exception ex)
-            {
-                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
-            }
+            return Ok(_questionsServices.GetAllQuestions());
         }
 
-        [HttpPost("questions")]
-        public IActionResult PostAddQuestion(RequestQuestion newQuestion)
+        [HttpPost]
+        public IActionResult PostAddQuestion([FromBody] RequestQuestion newQuestion)
         {
             try
             {
@@ -48,12 +41,12 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpGet("questions")]
-        public IActionResult GetAllQuestions()
+        [HttpPut("{id}")]
+        public IActionResult UpdateQuestion(int id, [FromBody] RequestQuestion editedQuestion)
         {
-            return Ok(_questionsServices.GetAllQuestions());
+            _questionsServices.UpdateQuestion(id, editedQuestion);
+            return Ok();
         }
-        
         
     }
 }

@@ -6,4 +6,5 @@ public interface IQuestionsServices
 {
     Question AddQuestion(RequestQuestion newQuestion);
     List<Question> GetAllQuestions();
+    void UpdateQuestion(int id, RequestQuestion editedQuestion);
 }

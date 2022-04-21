@@ -17,17 +17,19 @@ public class QuestionsServices : IQuestionsServices
 
     public Question AddQuestion(RequestQuestion newQuestion)
     {
+        Question addedQuestion = new Question()
+        {
+            Complexity = newQuestion.Complexity,
+            Note = newQuestion.Note,
+            Tags = newQuestion.Tags?.Select(tag => new Tag() {TagName = tag}).ToList() ?? new List<Tag>(),
+
+            Vote = newQuestion.Vote,
+            EasyToGoogle = newQuestion.EasyToGoogle ?? true,
+            QuestionContent = newQuestion.QuestionContent,
+        };
+
         using (var context = new InterviewHelperContext())
         {
-            Question addedQuestion = new Question()
-            {
-                Complexity = newQuestion.Complexity,
-                Note = newQuestion.Note,
-                Tags = newQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList(),
-                Vote = newQuestion.Vote,
-                EasyToGoogle = newQuestion.EasyToGoogle,
-                QuestionContent = newQuestion.QuestionContent,
-            };
             context.Questions.Add(addedQuestion);
             context.SaveChanges();
 
@@ -41,6 +43,37 @@ public class QuestionsServices : IQuestionsServices
         {
             var result = context.Questions.Include("Tags").ToList();
             return result;
+        }
+    }
+
+    public void UpdateQuestion(int id, RequestQuestion updatedQuestion)
+    {
+        if (id != updatedQuestion.Id)
+        {
+            //something wrong with provided question
+            throw new Exception();
+        }
+
+        using (var context = new InterviewHelperContext())
+        {
+            var existingQuestion = context.Questions.FirstOrDefault(q => q.Id == updatedQuestion.Id);
+            if (existingQuestion != null)
+            {
+                existingQuestion.Complexity = updatedQuestion.Complexity;
+                existingQuestion.Note = updatedQuestion.Note;
+                // how to update the tags?
+                // existingQuestion.Tags = updatedQuestion.Tags?.Select(tag => new Tag() {TagName = tag}).ToList() ??
+                //                         new List<Tag>();
+                existingQuestion.Vote = updatedQuestion.Vote;
+                existingQuestion.EasyToGoogle = updatedQuestion.EasyToGoogle ?? true;
+                existingQuestion.QuestionContent = updatedQuestion.QuestionContent;
+
+                // existingQuestion.Tags.Select(tag => tag.);
+            }
+
+
+            // check for DBupdateConcurrancy error 
+            context.SaveChanges();
         }
     }
 }
