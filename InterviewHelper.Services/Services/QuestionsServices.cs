@@ -50,24 +50,25 @@ public class QuestionsServices : IQuestionsServices
     {
         using (var context = new InterviewHelperContext())
         {
-            var existingQuestion = context.Questions.FirstOrDefault(q => q.Id == updatedQuestion.Id);
-            if (existingQuestion != null)
-            {
-                existingQuestion.Complexity = updatedQuestion.Complexity;
-                existingQuestion.Note = updatedQuestion.Note;
-                existingQuestion.Vote = updatedQuestion.Vote;
-                existingQuestion.EasyToGoogle = updatedQuestion.EasyToGoogle ?? true;
-                existingQuestion.QuestionContent = updatedQuestion.QuestionContent;
-
-                // how to update the tags?
-                // existingQuestion.Tags = updatedQuestion.Tags?.Select(tag => new Tag() {TagName = tag}).ToList() ??
-                //                         new List<Tag>();
-
-                // existingQuestion.Tags.Select(tag => tag.);
-            }
-
             try
             {
+                var existingQuestion = context.Questions.FirstOrDefault(q => q.Id == updatedQuestion.Id);
+                if (existingQuestion != null)
+                {
+                    existingQuestion.Complexity = updatedQuestion.Complexity;
+                    existingQuestion.Note = updatedQuestion.Note;
+                    existingQuestion.Vote = updatedQuestion.Vote;
+                    existingQuestion.EasyToGoogle = updatedQuestion.EasyToGoogle ?? true;
+                    existingQuestion.QuestionContent = updatedQuestion.QuestionContent;
+
+                    // how to update the tags?
+                    // existingQuestion.Tags = updatedQuestion.Tags?.Select(tag => new Tag() {TagName = tag}).ToList() ??
+                    //                         new List<Tag>();
+
+                    // existingQuestion.Tags.Select(tag => tag.);
+                }
+                else throw new Exception("Not Found");
+                
                 await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
