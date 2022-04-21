@@ -11,6 +11,6 @@ namespace InterviewHelper.Core.Models
         public string? Note { get; set; }
         public int Vote { get; set; }
         public bool EasyToGoogle { get; set; }
-        public List<Tag>? Tags { get; set; }
+        public virtual List<Tag>? Tags { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace InterviewHelper.DataAccess.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Question>()
-                .HasMany(c => c.Tags).WithMany(c => c.Questions);
+                .HasMany(c => c.Tags);
         }
         
         private readonly string _connectionString;

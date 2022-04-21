@@ -1,6 +1,7 @@
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.DataAccess.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace InterviewHelper.Services.Services;
@@ -22,12 +23,7 @@ public class QuestionsServices : IQuestionsServices
             {
                 Complexity = newQuestion.Complexity,
                 Note = newQuestion.Note,
-                Tags = newQuestion.Tags.Select(tag =>
-                {
-                    Console.WriteLine(tag);
-                    Console.WriteLine(new Tag() {TagName = tag}.TagName);
-                    return new Tag() {TagName = tag};
-                }).ToList(),
+                Tags = newQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList(),
                 Vote = newQuestion.Vote,
                 EasyToGoogle = newQuestion.EasyToGoogle,
                 QuestionContent = newQuestion.QuestionContent,
@@ -43,7 +39,7 @@ public class QuestionsServices : IQuestionsServices
     {
         using (var context = new InterviewHelperContext())
         {
-            var result = context.Questions.ToList();
+            var result = context.Questions.Include("Tags").ToList();
             return result;
         }
     }

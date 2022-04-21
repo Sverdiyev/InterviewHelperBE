@@ -6,7 +6,5 @@ public class Tag
 {
     public int Id { get; set; }
     public DateTime CreationDate { get; set; } = DateTime.Now;
-    public string TagName { get; set; } 
-    [JsonIgnore]
-    public List<Question> Questions { get; set; }
+    public string TagName { get; set; }
 }
