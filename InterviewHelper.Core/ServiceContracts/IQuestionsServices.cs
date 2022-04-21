@@ -4,7 +4,7 @@ namespace InterviewHelper.Core.ServiceContracts;
 
 public interface IQuestionsServices
 {
-    Question AddQuestion(RequestQuestion newQuestion);
+    Task<Question> AddQuestion(RequestQuestion newQuestion);
     List<Question> GetAllQuestions();
-    void UpdateQuestion(int id, RequestQuestion editedQuestion);
+    void UpdateQuestion(RequestQuestion updatedQuestion);
 }

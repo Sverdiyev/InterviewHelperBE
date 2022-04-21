@@ -15,7 +15,7 @@ public class QuestionsServices : IQuestionsServices
         _connectionString = config.Value.ConnectionString;
     }
 
-    public Question AddQuestion(RequestQuestion newQuestion)
+    public async Task<Question> AddQuestion(RequestQuestion newQuestion)
     {
         Question addedQuestion = new Question()
         {
@@ -31,7 +31,7 @@ public class QuestionsServices : IQuestionsServices
         using (var context = new InterviewHelperContext())
         {
             context.Questions.Add(addedQuestion);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return addedQuestion;
         }
@@ -46,14 +46,8 @@ public class QuestionsServices : IQuestionsServices
         }
     }
 
-    public void UpdateQuestion(int id, RequestQuestion updatedQuestion)
+    public async void UpdateQuestion(RequestQuestion updatedQuestion)
     {
-        if (id != updatedQuestion.Id)
-        {
-            //something wrong with provided question
-            throw new Exception();
-        }
-
         using (var context = new InterviewHelperContext())
         {
             var existingQuestion = context.Questions.FirstOrDefault(q => q.Id == updatedQuestion.Id);
@@ -61,19 +55,25 @@ public class QuestionsServices : IQuestionsServices
             {
                 existingQuestion.Complexity = updatedQuestion.Complexity;
                 existingQuestion.Note = updatedQuestion.Note;
-                // how to update the tags?
-                // existingQuestion.Tags = updatedQuestion.Tags?.Select(tag => new Tag() {TagName = tag}).ToList() ??
-                //                         new List<Tag>();
                 existingQuestion.Vote = updatedQuestion.Vote;
                 existingQuestion.EasyToGoogle = updatedQuestion.EasyToGoogle ?? true;
                 existingQuestion.QuestionContent = updatedQuestion.QuestionContent;
 
+                // how to update the tags?
+                // existingQuestion.Tags = updatedQuestion.Tags?.Select(tag => new Tag() {TagName = tag}).ToList() ??
+                //                         new List<Tag>();
+
                 // existingQuestion.Tags.Select(tag => tag.);
             }
 
-
-            // check for DBupdateConcurrancy error 
-            context.SaveChanges();
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new Exception("Not Found");
+            }
         }
     }
 }

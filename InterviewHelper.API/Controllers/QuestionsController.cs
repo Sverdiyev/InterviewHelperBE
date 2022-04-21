@@ -42,10 +42,22 @@ namespace InterviewHelper.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateQuestion(int id, [FromBody] RequestQuestion editedQuestion)
+        public IActionResult UpdateQuestion(int id, [FromBody] RequestQuestion updatedQuestion)
         {
-            _questionsServices.UpdateQuestion(id, editedQuestion);
-            return Ok();
+            if (id != updatedQuestion.Id) return BadRequest();
+
+            try
+            {
+                _questionsServices.UpdateQuestion(updatedQuestion);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "Not Found") return NotFound();
+
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+            }
+
         }
         
     }
