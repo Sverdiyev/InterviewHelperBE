@@ -3,6 +3,7 @@ using System;
 using InterviewHelper.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InterviewHelper.DataAccess.Migrations
 {
     [DbContext(typeof(InterviewHelperContext))]
-    partial class InterviewHelperContextModelSnapshot : ModelSnapshot
+    [Migration("20220421111357_changeToVirtual")]
+    partial class changeToVirtual
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
@@ -57,30 +59,43 @@ namespace InterviewHelper.DataAccess.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("QuestionId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("TagName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionId");
-
                     b.ToTable("Tag");
                 });
 
-            modelBuilder.Entity("InterviewHelper.Core.Models.Tag", b =>
+            modelBuilder.Entity("QuestionTag", b =>
                 {
-                    b.HasOne("InterviewHelper.Core.Models.Question", null)
-                        .WithMany("Tags")
-                        .HasForeignKey("QuestionId");
+                    b.Property<int>("QuestionsId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TagsId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("QuestionsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("QuestionTag");
                 });
 
-            modelBuilder.Entity("InterviewHelper.Core.Models.Question", b =>
+            modelBuilder.Entity("QuestionTag", b =>
                 {
-                    b.Navigation("Tags");
+                    b.HasOne("InterviewHelper.Core.Models.Question", null)
+                        .WithMany()
+                        .HasForeignKey("QuestionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InterviewHelper.Core.Models.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
