@@ -5,6 +5,12 @@ namespace InterviewHelper.DataAccess.Data
 {
     public class InterviewHelperContext : DbContext
     {
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Question>()
+                .HasMany(c => c.Tags).WithMany(c => c.Questions);
+        }
+        
         private readonly string _connectionString;
 
         public InterviewHelperContext()
@@ -26,5 +32,7 @@ namespace InterviewHelper.DataAccess.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite(_connectionString);
+
+        
     }
 }
