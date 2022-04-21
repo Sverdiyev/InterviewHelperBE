@@ -14,8 +14,37 @@ public class QuestionsServices : IQuestionsServices
         _connectionString = config.Value.ConnectionString;
     }
 
-    public void AddQuestion()
+    public Question AddQuestion(RequestQuestion newQuestion)
     {
-        throw new NotImplementedException();
+        using (var context = new InterviewHelperContext())
+        {
+            Question addedQuestion = new Question()
+            {
+                Complexity = newQuestion.Complexity,
+                Note = newQuestion.Note,
+                Tags = newQuestion.Tags.Select(tag =>
+                {
+                    Console.WriteLine(tag);
+                    Console.WriteLine(new Tag() {TagName = tag}.TagName);
+                    return new Tag() {TagName = tag};
+                }).ToList(),
+                Vote = newQuestion.Vote,
+                EasyToGoogle = newQuestion.EasyToGoogle,
+                QuestionContent = newQuestion.QuestionContent,
+            };
+            context.Questions.Add(addedQuestion);
+            context.SaveChanges();
+
+            return addedQuestion;
+        }
+    }
+
+    public List<Question> GetAllQuestions()
+    {
+        using (var context = new InterviewHelperContext())
+        {
+            var result = context.Questions.ToList();
+            return result;
+        }
     }
 }

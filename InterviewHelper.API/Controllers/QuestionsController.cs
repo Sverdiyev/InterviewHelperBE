@@ -1,5 +1,7 @@
 using System.Net;
+using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
+using InterviewHelper.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewHelper.Api.Controllers
@@ -10,13 +12,14 @@ namespace InterviewHelper.Api.Controllers
     {
         private readonly IQuestionRepository _questionRepository;
         private readonly ILogger<QuestionsController> _logger;
-
+        private readonly IQuestionsServices _questionsServices;
 
         public QuestionsController(IQuestionRepository questionRepository,
-            ILogger<QuestionsController> logger)
+            ILogger<QuestionsController> logger, IQuestionsServices questionsServices)
         {
             _questionRepository = questionRepository;
             _logger = logger;
+            _questionsServices = questionsServices;
         }
 
         [HttpGet("allQuestions")]
@@ -31,5 +34,26 @@ namespace InterviewHelper.Api.Controllers
                 return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+        [HttpPost("questions")]
+        public IActionResult PostAddQuestion(RequestQuestion newQuestion)
+        {
+            try
+            {
+                return Ok(_questionsServices.AddQuestion(newQuestion));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("questions")]
+        public IActionResult GetAllQuestions()
+        {
+            return Ok(_questionsServices.GetAllQuestions());
+        }
+        
+        
     }
 }

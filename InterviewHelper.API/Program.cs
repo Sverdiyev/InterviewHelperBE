@@ -22,6 +22,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<MockQuestionFactory>();
+builder.Services.AddScoped<IQuestionsServices, QuestionsServices>();
 builder.Services.Configure<DBConfiguration>(builder.Configuration.GetSection("Database"));
 
 InitializationService.Init(builder.Configuration.GetValue<string>("Database:ConnectionString"));

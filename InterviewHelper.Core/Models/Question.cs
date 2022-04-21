@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace InterviewHelper.Core.Models
 {
     public class Question
@@ -8,5 +10,7 @@ namespace InterviewHelper.Core.Models
         public string QuestionContent { get; set; }
         public string? Note { get; set; }
         public int Vote { get; set; }
+        public bool EasyToGoogle { get; set; }
+        public List<Tag>? Tags { get; set; }
     }
 }
