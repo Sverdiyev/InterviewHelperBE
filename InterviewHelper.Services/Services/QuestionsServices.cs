@@ -21,10 +21,10 @@ public class QuestionsServices : IQuestionsServices
         {
             Complexity = newQuestion.Complexity,
             Note = newQuestion.Note,
-            Tags = newQuestion.Tags?.Select(tag => new Tag() {TagName = tag}).ToList() ?? new List<Tag>(),
+            Tags = newQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList(),
 
             Vote = newQuestion.Vote,
-            EasyToGoogle = newQuestion.EasyToGoogle ?? true,
+            EasyToGoogle = newQuestion.EasyToGoogle,
             QuestionContent = newQuestion.QuestionContent,
         };
 
@@ -37,15 +37,31 @@ public class QuestionsServices : IQuestionsServices
         }
     }
 
-    public List<Question> GetAllQuestions()
+    public List<Question> GetQuestions(string? rawSearchParam)
     {
         using (var context = new InterviewHelperContext())
         {
-            var result = context.Questions.Include("Tags").ToList();
+            if (rawSearchParam == null)
+            {
+                return context.Questions.Include("Tags").ToList();
+            }
+
+            var searchParam = rawSearchParam.ToLower().Trim();
+
+            var result = new List<Question>();
+            result.AddRange(context.Questions
+                .Where(q => q.Note.ToLower().Contains(searchParam) ||
+                            q.QuestionContent.ToLower().Contains(searchParam) ||
+                            (q.EasyToGoogle && searchParam == "easy to google") ||
+                            q.Complexity.ToLower().Contains(searchParam) ||
+                            q.Tags.Any(t => t.TagName.ToLower().Contains(searchParam)))
+                .Include("Tags")
+                .ToList());
+
             return result;
         }
     }
-
+    
     public async void UpdateQuestion(RequestQuestion updatedQuestion)
     {
         using (var context = new InterviewHelperContext())
@@ -58,22 +74,18 @@ public class QuestionsServices : IQuestionsServices
                     existingQuestion.Complexity = updatedQuestion.Complexity;
                     existingQuestion.Note = updatedQuestion.Note;
                     existingQuestion.Vote = updatedQuestion.Vote;
-                    existingQuestion.EasyToGoogle = updatedQuestion.EasyToGoogle ?? true;
+                    existingQuestion.EasyToGoogle = updatedQuestion.EasyToGoogle;
                     existingQuestion.QuestionContent = updatedQuestion.QuestionContent;
-
-                    // how to update the tags?
-                    // existingQuestion.Tags = updatedQuestion.Tags?.Select(tag => new Tag() {TagName = tag}).ToList() ??
-                    //                         new List<Tag>();
-
-                    // existingQuestion.Tags.Select(tag => tag.);
+                    existingQuestion.Tags.Clear();
+                    existingQuestion.Tags = updatedQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList();
                 }
                 else throw new Exception("Not Found");
                 
                 await context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                throw new Exception("Not Found");
+                throw new Exception(ex.Message);
             }
         }
     }

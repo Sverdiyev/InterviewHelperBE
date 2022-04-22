@@ -23,9 +23,9 @@ namespace InterviewHelper.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllQuestions()
+        public IActionResult GetQuestions([FromQuery(Name = "search")] string? searchParam)
         {
-            return Ok(_questionsServices.GetAllQuestions());
+            return Ok(_questionsServices.GetQuestions(searchParam));
         }
 
         [HttpPost]
@@ -42,10 +42,8 @@ namespace InterviewHelper.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateQuestion(int id, [FromBody] RequestQuestion updatedQuestion)
+        public IActionResult UpdateQuestion([FromBody] RequestQuestion updatedQuestion)
         {
-            if (id != updatedQuestion.Id) return BadRequest();
-
             try
             {
                 _questionsServices.UpdateQuestion(updatedQuestion);
