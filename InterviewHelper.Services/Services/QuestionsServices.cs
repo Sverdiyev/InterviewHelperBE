@@ -22,8 +22,6 @@ public class QuestionsServices : IQuestionsServices
             Complexity = newQuestion.Complexity,
             Note = newQuestion.Note,
             Tags = newQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList(),
-
-            Vote = newQuestion.Vote,
             EasyToGoogle = newQuestion.EasyToGoogle,
             QuestionContent = newQuestion.QuestionContent,
         };
