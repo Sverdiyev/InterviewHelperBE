@@ -6,5 +6,5 @@ public interface IQuestionsServices
 {
     Task<Question> AddQuestion(RequestQuestion newQuestion);
     List<Question> GetQuestions(string? searchParam);
-    void UpdateQuestion(RequestQuestion updatedQuestion);
+    Task<string> UpdateQuestion(RequestQuestion updatedQuestion);
 }

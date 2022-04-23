@@ -59,8 +59,8 @@ public class QuestionsServices : IQuestionsServices
             return result;
         }
     }
-    
-    public async void UpdateQuestion(RequestQuestion updatedQuestion)
+
+    public async Task<string> UpdateQuestion(RequestQuestion updatedQuestion)
     {
         using (var context = new InterviewHelperContext())
         {
@@ -78,13 +78,18 @@ public class QuestionsServices : IQuestionsServices
                     existingQuestion.Tags.Clear();
                     existingQuestion.Tags = updatedQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList();
                 }
-                else throw new Exception("Not Found");
+                else
+                {
+                    throw new Exception("not found");
+                }
                 
                 await context.SaveChangesAsync();
+
+                return "success";
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return (ex.Message);
             }
         }
     }
