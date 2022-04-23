@@ -17,7 +17,7 @@ public class QuestionsServices : IQuestionsServices
 
     public async Task<Question> AddQuestion(RequestQuestion newQuestion)
     {
-        Question addedQuestion = new Question()
+        var addedQuestion = new Question()
         {
             Complexity = newQuestion.Complexity,
             Note = newQuestion.Note,
@@ -46,17 +46,14 @@ public class QuestionsServices : IQuestionsServices
 
             var searchParam = rawSearchParam.ToLower().Trim();
 
-            var result = new List<Question>();
-            result.AddRange(context.Questions
+            return context.Questions
                 .Where(q => q.Note.ToLower().Contains(searchParam) ||
                             q.QuestionContent.ToLower().Contains(searchParam) ||
                             (q.EasyToGoogle && searchParam == "easy to google") ||
                             q.Complexity.ToLower().Contains(searchParam) ||
                             q.Tags.Any(t => t.TagName.ToLower().Contains(searchParam)))
                 .Include("Tags")
-                .ToList());
-
-            return result;
+                .ToList();
         }
     }
 

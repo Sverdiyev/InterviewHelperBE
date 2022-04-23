@@ -46,14 +46,11 @@ namespace InterviewHelper.Api.Controllers
         {
             var result = await _questionsServices.UpdateQuestion(updatedQuestion);
             if (result == "success")
-            {
                 return NoContent();
-            }
 
             if (result == "not found")
-            {
                 return NotFound();
-            }
+            
 
             return StatusCode((int) HttpStatusCode.InternalServerError, result);
         }
