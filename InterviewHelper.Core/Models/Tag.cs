@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace InterviewHelper.Core.Models;
 
 public class Tag
