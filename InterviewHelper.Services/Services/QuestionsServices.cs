@@ -66,7 +66,8 @@ public class QuestionsServices : IQuestionsServices
         {
             try
             {
-                var existingQuestion = context.Questions.FirstOrDefault(q => q.Id == updatedQuestion.Id);
+                var existingQuestion =
+                    context.Questions.Include("Tags").FirstOrDefault(q => q.Id == updatedQuestion.Id);
                 if (existingQuestion != null)
                 {
                     existingQuestion.Complexity = updatedQuestion.Complexity;

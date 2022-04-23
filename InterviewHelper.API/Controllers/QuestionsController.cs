@@ -41,7 +41,7 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateQuestion([FromBody] RequestQuestion updatedQuestion)
         {
             try
