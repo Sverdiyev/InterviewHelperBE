@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InterviewHelper.DataAccess.Migrations
 {
     [DbContext(typeof(InterviewHelperContext))]
-    [Migration("20220421111729_changeRelationship")]
-    partial class changeRelationship
+    [Migration("20220425115829_addQuestionModel")]
+    partial class addQuestionModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,6 +36,7 @@ namespace InterviewHelper.DataAccess.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Note")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("QuestionContent")
@@ -55,9 +56,6 @@ namespace InterviewHelper.DataAccess.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("TEXT");
 
                     b.Property<int?>("QuestionId")
                         .HasColumnType("INTEGER");

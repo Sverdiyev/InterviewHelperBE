@@ -4,7 +4,7 @@
 
 namespace InterviewHelper.DataAccess.Migrations
 {
-    public partial class UpdatedTags : Migration
+    public partial class addQuestionModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -55,9 +55,6 @@ namespace InterviewHelper.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("TEXT");
-
                     b.Property<int?>("QuestionId")
                         .HasColumnType("INTEGER");
 
