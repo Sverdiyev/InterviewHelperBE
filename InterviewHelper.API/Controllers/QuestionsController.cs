@@ -23,9 +23,9 @@ namespace InterviewHelper.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetQuestions([FromQuery(Name = "search")] string? searchParam)
+        public IActionResult GetQuestions(string? search)
         {
-            return Ok(_questionsServices.GetQuestions(searchParam));
+            return Ok(_questionsServices.GetQuestions(search));
         }
 
         [HttpPost]

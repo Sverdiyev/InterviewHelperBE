@@ -26,7 +26,7 @@ public class QuestionsServices : IQuestionsServices
             QuestionContent = newQuestion.QuestionContent,
         };
 
-        using (var context = new InterviewHelperContext())
+        using (var context = new InterviewHelperContext(_connectionString))
         {
             context.Questions.Add(addedQuestion);
             await context.SaveChangesAsync();
@@ -37,9 +37,9 @@ public class QuestionsServices : IQuestionsServices
 
     public List<Question> GetQuestions(string? rawSearchParam)
     {
-        using (var context = new InterviewHelperContext())
+        using (var context = new InterviewHelperContext(_connectionString))
         {
-            if (!string.IsNullOrEmpty(rawSearchParam))
+            if (string.IsNullOrEmpty(rawSearchParam))
             {
                 return context.Questions.Include("Tags").ToList();
             }
@@ -58,7 +58,7 @@ public class QuestionsServices : IQuestionsServices
 
     public async Task UpdateQuestion(RequestQuestion updatedQuestion)
     {
-        using (var context = new InterviewHelperContext())
+        using (var context = new InterviewHelperContext(_connectionString))
         {
             var existingQuestion =
                 context.Questions.Include("Tags").FirstOrDefault(q => q.Id == updatedQuestion.Id);
