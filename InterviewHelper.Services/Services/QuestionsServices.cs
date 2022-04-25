@@ -39,7 +39,7 @@ public class QuestionsServices : IQuestionsServices
     {
         using (var context = new InterviewHelperContext())
         {
-            if (rawSearchParam == null)
+            if (!string.IsNullOrEmpty(rawSearchParam))
             {
                 return context.Questions.Include("Tags").ToList();
             }
@@ -61,31 +61,31 @@ public class QuestionsServices : IQuestionsServices
     {
         using (var context = new InterviewHelperContext())
         {
-            try
+            var existingQuestion =
+                context.Questions.Include("Tags").FirstOrDefault(q => q.Id == updatedQuestion.Id);
+            if (existingQuestion != null)
             {
-                var existingQuestion =
-                    context.Questions.Include("Tags").FirstOrDefault(q => q.Id == updatedQuestion.Id);
-                if (existingQuestion != null)
-                {
-                    existingQuestion.Complexity = updatedQuestion.Complexity;
-                    existingQuestion.Note = updatedQuestion.Note;
-                    existingQuestion.Vote = updatedQuestion.Vote;
-                    existingQuestion.EasyToGoogle = updatedQuestion.EasyToGoogle;
-                    existingQuestion.QuestionContent = updatedQuestion.QuestionContent;
-                    existingQuestion.Tags.Clear();
-                    existingQuestion.Tags = updatedQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList();
-                }
-                else
-                {
-                    throw new Exception("not found");
-                }
-                
-                await context.SaveChangesAsync();
+                existingQuestion.Complexity = updatedQuestion.Complexity;
+                existingQuestion.Note = updatedQuestion.Note;
+                existingQuestion.Vote = updatedQuestion.Vote;
+                existingQuestion.EasyToGoogle = updatedQuestion.EasyToGoogle;
+                existingQuestion.QuestionContent = updatedQuestion.QuestionContent;
+                existingQuestion.Tags.Clear();
+                existingQuestion.Tags = updatedQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList();
             }
-            catch (Exception ex)
+            else
             {
-                throw new Exception(ex.Message);
+                throw new QuestionNotFoundException();
             }
+
+            await context.SaveChangesAsync();
         }
+    }
+}
+
+public class QuestionNotFoundException : Exception
+{
+    public QuestionNotFoundException() : base("Question not found")
+    {
     }
 }

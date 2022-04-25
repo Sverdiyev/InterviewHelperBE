@@ -49,10 +49,12 @@ namespace InterviewHelper.Api.Controllers
                 await _questionsServices.UpdateQuestion(updatedQuestion);
                 return NoContent();
             }
+            catch (QuestionNotFoundException e)
+            {
+                return NotFound();
+            }
             catch (Exception e)
             {
-                if (e.Message == "not found")
-                    return NotFound();
                 return StatusCode((int) HttpStatusCode.InternalServerError, e.Message);
             }
         }
