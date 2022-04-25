@@ -24,6 +24,7 @@ public class QuestionsServices : IQuestionsServices
             Tags = newQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList(),
             EasyToGoogle = newQuestion.EasyToGoogle,
             QuestionContent = newQuestion.QuestionContent,
+            CreationDate = DateTime.Now,
         };
 
         using (var context = new InterviewHelperContext(_connectionString))
