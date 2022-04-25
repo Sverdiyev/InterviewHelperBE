@@ -49,7 +49,6 @@ public class QuestionsServices : IQuestionsServices
             return context.Questions
                 .Where(q => q.Note.ToLower().Contains(searchParam) ||
                             q.QuestionContent.ToLower().Contains(searchParam) ||
-                            (q.EasyToGoogle && searchParam == "easy to google") ||
                             q.Complexity.ToLower().Contains(searchParam) ||
                             q.Tags.Any(t => t.TagName.ToLower().Contains(searchParam)))
                 .Include("Tags")
