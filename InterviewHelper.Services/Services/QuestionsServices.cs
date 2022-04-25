@@ -57,7 +57,7 @@ public class QuestionsServices : IQuestionsServices
         }
     }
 
-    public async Task<string> UpdateQuestion(RequestQuestion updatedQuestion)
+    public async Task UpdateQuestion(RequestQuestion updatedQuestion)
     {
         using (var context = new InterviewHelperContext())
         {
@@ -81,12 +81,10 @@ public class QuestionsServices : IQuestionsServices
                 }
                 
                 await context.SaveChangesAsync();
-
-                return "success";
             }
             catch (Exception ex)
             {
-                return (ex.Message);
+                throw new Exception(ex.Message);
             }
         }
     }

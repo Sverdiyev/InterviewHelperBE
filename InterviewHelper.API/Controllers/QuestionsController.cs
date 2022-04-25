@@ -29,7 +29,7 @@ namespace InterviewHelper.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult PostAddQuestion([FromBody] RequestQuestion newQuestion)
+        public IActionResult PostAddQuestion(RequestQuestion newQuestion)
         {
             try
             {
@@ -42,18 +42,19 @@ namespace InterviewHelper.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateQuestion([FromBody] RequestQuestion updatedQuestion)
+        public async Task<IActionResult> UpdateQuestion(RequestQuestion updatedQuestion)
         {
-            var result = await _questionsServices.UpdateQuestion(updatedQuestion);
-            if (result == "success")
+            try
+            {
+                await _questionsServices.UpdateQuestion(updatedQuestion);
                 return NoContent();
-
-            if (result == "not found")
-                return NotFound();
-            
-
-            return StatusCode((int) HttpStatusCode.InternalServerError, result);
+            }
+            catch (Exception e)
+            {
+                if (e.Message == "not found")
+                    return NotFound();
+                return StatusCode((int) HttpStatusCode.InternalServerError, e.Message);
+            }
         }
-        
     }
 }
