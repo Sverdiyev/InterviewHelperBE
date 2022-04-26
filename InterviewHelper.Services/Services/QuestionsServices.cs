@@ -68,7 +68,6 @@ public class QuestionsServices : IQuestionsServices
             {
                 existingQuestion.Complexity = updatedQuestion.Complexity;
                 existingQuestion.Note = updatedQuestion.Note;
-                existingQuestion.Vote = updatedQuestion.Vote;
                 existingQuestion.EasyToGoogle = updatedQuestion.EasyToGoogle;
                 existingQuestion.QuestionContent = updatedQuestion.QuestionContent;
                 existingQuestion.Tags.Clear();
