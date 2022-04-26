@@ -6,9 +6,6 @@ public class RequestQuestion
 {
     private enum ComplexityOptions
     {
-        Easy,
-        Medium,
-        Hard,
         easy,
         medium,
         hard

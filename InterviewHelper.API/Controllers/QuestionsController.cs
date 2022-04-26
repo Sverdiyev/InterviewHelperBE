@@ -49,7 +49,7 @@ namespace InterviewHelper.Api.Controllers
             try
             {
                 await _questionsServices.UpdateQuestion(updatedQuestion);
-                return NoContent();
+                return Ok();
             }
             catch (QuestionNotFoundException ex)
             {
