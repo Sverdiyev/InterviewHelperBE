@@ -16,7 +16,7 @@ public class QuestionsServices : IQuestionsServices
         _connectionString = config.Value.ConnectionString;
     }
 
-    public async void AddQuestion(RequestQuestion newQuestion)
+    public async Task AddQuestion(RequestQuestion newQuestion)
     {
         var addedQuestion = new Question()
         {
@@ -62,19 +62,17 @@ public class QuestionsServices : IQuestionsServices
         {
             var existingQuestion =
                 context.Questions.Include("Tags").FirstOrDefault(q => q.Id == updatedQuestion.Id);
-            if (existingQuestion != null)
-            {
-                existingQuestion.Complexity = updatedQuestion.Complexity;
-                existingQuestion.Note = updatedQuestion.Note;
-                existingQuestion.EasyToGoogle = updatedQuestion.EasyToGoogle;
-                existingQuestion.QuestionContent = updatedQuestion.QuestionContent;
-                existingQuestion.Tags.Clear();
-                existingQuestion.Tags = updatedQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList();
-            }
-            else
+            if (existingQuestion == null)
             {
                 throw new QuestionNotFoundException();
             }
+
+            existingQuestion.Complexity = updatedQuestion.Complexity;
+            existingQuestion.Note = updatedQuestion.Note;
+            existingQuestion.EasyToGoogle = updatedQuestion.EasyToGoogle;
+            existingQuestion.QuestionContent = updatedQuestion.QuestionContent;
+            existingQuestion.Tags.Clear();
+            existingQuestion.Tags = updatedQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList();
 
             await context.SaveChangesAsync();
         }
