@@ -31,7 +31,8 @@ namespace InterviewHelper.Api.Controllers
         {
             try
             {
-                return Ok(_questionsServices.AddQuestion(newQuestion));
+                _questionsServices.AddQuestion(newQuestion);
+                return Ok();
             }
             catch (Exception ex)
             {

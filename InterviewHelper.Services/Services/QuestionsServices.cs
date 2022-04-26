@@ -16,7 +16,7 @@ public class QuestionsServices : IQuestionsServices
         _connectionString = config.Value.ConnectionString;
     }
 
-    public async Task<Question> AddQuestion(RequestQuestion newQuestion)
+    public async void AddQuestion(RequestQuestion newQuestion)
     {
         var addedQuestion = new Question()
         {
@@ -32,8 +32,6 @@ public class QuestionsServices : IQuestionsServices
         {
             context.Questions.Add(addedQuestion);
             await context.SaveChangesAsync();
-
-            return addedQuestion;
         }
     }
 
