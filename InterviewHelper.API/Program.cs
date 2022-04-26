@@ -1,6 +1,5 @@
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
-using InterviewHelper.DataAccess.Repositories;
 using InterviewHelper.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,8 +19,6 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
-builder.Services.AddScoped<MockQuestionFactory>();
 builder.Services.AddScoped<IQuestionsServices, QuestionsServices>();
 builder.Services.Configure<DBConfiguration>(builder.Configuration.GetSection("Database"));
 

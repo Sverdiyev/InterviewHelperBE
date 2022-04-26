@@ -2,7 +2,6 @@ using System.Net;
 using InterviewHelper.Core.Exceptions;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
-using InterviewHelper.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewHelper.Api.Controllers
@@ -11,15 +10,12 @@ namespace InterviewHelper.Api.Controllers
     [Route("[controller]")]
     public class QuestionsController : ControllerBase
     {
-        private readonly IQuestionRepository _questionRepository;
         private readonly ILogger<QuestionsController> _logger;
         private readonly IQuestionsServices _questionsServices;
 
-        public QuestionsController(IQuestionRepository questionRepository,
-            ILogger<QuestionsController> logger,
+        public QuestionsController(ILogger<QuestionsController> logger,
             IQuestionsServices questionsServices)
         {
-            _questionRepository = questionRepository;
             _logger = logger;
             _questionsServices = questionsServices;
         }
