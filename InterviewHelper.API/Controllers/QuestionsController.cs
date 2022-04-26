@@ -1,4 +1,5 @@
 using System.Net;
+using InterviewHelper.Core.Exceptions;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.Services.Services;
@@ -15,7 +16,8 @@ namespace InterviewHelper.Api.Controllers
         private readonly IQuestionsServices _questionsServices;
 
         public QuestionsController(IQuestionRepository questionRepository,
-            ILogger<QuestionsController> logger, IQuestionsServices questionsServices)
+            ILogger<QuestionsController> logger,
+            IQuestionsServices questionsServices)
         {
             _questionRepository = questionRepository;
             _logger = logger;
@@ -49,13 +51,13 @@ namespace InterviewHelper.Api.Controllers
                 await _questionsServices.UpdateQuestion(updatedQuestion);
                 return NoContent();
             }
-            catch (QuestionNotFoundException e)
+            catch (QuestionNotFoundException ex)
             {
-                return NotFound();
+                return BadRequest();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return StatusCode((int) HttpStatusCode.InternalServerError, e.Message);
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
         }
     }

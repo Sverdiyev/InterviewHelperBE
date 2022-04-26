@@ -1,3 +1,4 @@
+using InterviewHelper.Core.Exceptions;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.DataAccess.Data;
@@ -80,12 +81,5 @@ public class QuestionsServices : IQuestionsServices
 
             await context.SaveChangesAsync();
         }
-    }
-}
-
-public class QuestionNotFoundException : Exception
-{
-    public QuestionNotFoundException() : base("Question not found")
-    {
     }
 }
