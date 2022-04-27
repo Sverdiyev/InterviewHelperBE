@@ -1,5 +1,6 @@
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
+using InterviewHelper.DataAccess.Repositories;
 using InterviewHelper.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IQuestionsServices, QuestionsServices>();
+// inject userRepository in userService
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+// inject userService in userController
+builder.Services.AddScoped<UserService>();
 builder.Services.Configure<DBConfiguration>(builder.Configuration.GetSection("Database"));
 
 InitializationService.Init(builder.Configuration.GetValue<string>("Database:ConnectionString"));

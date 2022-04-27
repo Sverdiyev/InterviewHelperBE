@@ -29,8 +29,11 @@ namespace InterviewHelper.DataAccess.Data
         }
 
         public DbSet<Question> Questions { get; set; }
+        public DbSet<User> Users { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite(_connectionString);
+        protected override void OnConfiguring(DbContextOptionsBuilder options) =>
+            options.UseSqlite();
+
+
     }
 }
