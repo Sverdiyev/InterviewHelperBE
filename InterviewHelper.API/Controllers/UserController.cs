@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Security.Claims;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.Services.Services;
@@ -37,8 +38,13 @@ namespace InterviewHelper.Api.Controllers
         [HttpPut]
         public IActionResult EditUser(User user)
         {
+            var currentUser = this.User;
+            
             try
             {
+                // throws exception if the authenticated user is not the one editing
+                _userService.CheckAuthority(currentUser, user.Id);  
+                
                 _userService.EditUser(user);
                 return Ok();
 

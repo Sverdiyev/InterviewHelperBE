@@ -8,6 +8,10 @@ public interface IUserRepository
 
     void EditUserDetails(User user);
 
+    User GetUserById(int userId);
+
+    public User GetUserByEmail(string userEmail);
+
 
 
 }

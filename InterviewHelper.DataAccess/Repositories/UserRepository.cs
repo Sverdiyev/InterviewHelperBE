@@ -26,6 +26,7 @@ public class UserRepository : IUserRepository
 
     public void EditUserDetails(User user)
     {
+        
         using var context = new InterviewHelperContext(_connectionString);
         var userToEdit = context.Users.FirstOrDefault(u => u.Id == user.Id);
         if (userToEdit == null)
@@ -35,5 +36,21 @@ public class UserRepository : IUserRepository
         userToEdit.Name = user.Name;
         userToEdit.Email = user.Email;
         userToEdit.Password = user.Password;
+    }
+
+    public User GetUserById(int userId)
+    {
+        using var context = new InterviewHelperContext(_connectionString);
+        var user = context.Users.FirstOrDefault(u => u.Id == userId);
+
+        return user;
+    }
+
+    public User GetUserByEmail(string userEmail)
+    {
+        using var context = new InterviewHelperContext(_connectionString);
+        var user = context.Users.FirstOrDefault(u => u.Email == userEmail);
+
+        return user;
     }
 }
