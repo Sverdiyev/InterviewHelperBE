@@ -5,6 +5,12 @@ namespace InterviewHelper.DataAccess.Data
 {
     public class InterviewHelperContext : DbContext
     {
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Question>()
+                .HasMany(c => c.Tags);
+        }
+
         private readonly string _connectionString;
 
         public InterviewHelperContext()
