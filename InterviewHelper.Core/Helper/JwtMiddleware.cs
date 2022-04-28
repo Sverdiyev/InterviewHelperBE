@@ -43,7 +43,7 @@ public class JwtMiddleware
                 ClockSkew = TimeSpan.Zero
             }, out var validatedToken);
 
-            var jwtToken = (JwtSecurityToken)validatedToken;
+            var jwtToken = (JwtSecurityToken) validatedToken;
             var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
             // attach user to context on successful jwt validation

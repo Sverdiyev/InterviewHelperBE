@@ -13,10 +13,4 @@ public interface IUserRepository
     public User GetUserByEmail(string userEmail);
 
     public User GetUserWithDetails(string userEmail, byte[] userPassword);
-
-
-
-
-
-
 }

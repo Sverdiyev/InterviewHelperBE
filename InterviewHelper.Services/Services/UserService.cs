@@ -31,11 +31,10 @@ public class UserService
         var newUser = new User(newUserDto);
 
         _userRepository.AddUser(newUser);
-        
+
         var token = GenerateJwtToken(newUser);
 
         return new AuthenticateResponseDTO(newUser, token);
-        
     }
 
     public void EditUser(User user)
@@ -43,10 +42,10 @@ public class UserService
         _userRepository.EditUserDetails(user);
     }
 
-    public AuthenticateResponseDTO  AuthenticateUser(AuthenticateRequestDTO user)
+    public AuthenticateResponseDTO AuthenticateUser(AuthenticateRequestDTO user)
     {
         var dbUser = _userRepository.GetUserWithDetails(user.Email, _sha.ComputeHash(user.Password));
-            
+
         // return null if user not found
         if (dbUser == null) return null;
 
@@ -65,7 +64,7 @@ public class UserService
             throw new UnauthorizedOperation();
         }
     }
-    
+
     // helper function to generate jwt token 
     private string GenerateJwtToken(User user)
     {
@@ -74,9 +73,10 @@ public class UserService
         var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
+            Subject = new ClaimsIdentity(new[] {new Claim("id", user.Id.ToString())}),
             Expires = DateTime.UtcNow.AddDays(7),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials =
+                new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);

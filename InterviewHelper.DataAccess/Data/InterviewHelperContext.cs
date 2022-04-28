@@ -32,7 +32,7 @@ namespace InterviewHelper.DataAccess.Data
         public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options) =>
-            options.UseSqlite();
+            options.UseSqlite(_connectionString);
 
 
     }

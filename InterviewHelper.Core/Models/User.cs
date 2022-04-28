@@ -8,13 +8,12 @@ namespace InterviewHelper.Core.Models
         public DateTime CreationDate { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        [JsonIgnore]
-        public byte[] Password { get; set; }
+        [JsonIgnore] public byte[] Password { get; set; }
 
         public User()
         {
-            
         }
+
         // custom DTO constructor
         public User(UserDTO user)
         {
