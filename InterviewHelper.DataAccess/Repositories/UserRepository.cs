@@ -53,4 +53,12 @@ public class UserRepository : IUserRepository
 
         return user;
     }
+
+    public User GetUserWithDetails(string userEmail, byte[] userPassword)
+    {
+        using var context = new InterviewHelperContext(_connectionString);
+        var user = context.Users.FirstOrDefault(u => u.Email == userEmail && u.Password == userPassword);
+
+        return user;
+    }
 }

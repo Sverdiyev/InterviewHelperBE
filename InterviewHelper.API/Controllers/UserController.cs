@@ -1,7 +1,6 @@
 ﻿using System.Net;
-using System.Security.Claims;
 using InterviewHelper.Core.Models;
-using InterviewHelper.Core.ServiceContracts;
+using InterviewHelper.Core.Models.AuthenticationModels;
 using InterviewHelper.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +21,7 @@ namespace InterviewHelper.Api.Controllers
         }
         
         // add user
-        [HttpPost]
+        [HttpPost("add-user")]
         public IActionResult AddUser(UserDTO newUser)
         {
             try
@@ -35,7 +34,7 @@ namespace InterviewHelper.Api.Controllers
             }
         }
         // edit user
-        [HttpPut]
+        [HttpPut("edit-user")]
         public IActionResult EditUser(User user)
         {
             var currentUser = this.User;
@@ -53,6 +52,17 @@ namespace InterviewHelper.Api.Controllers
             {
                 return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
+        }
+        
+        [HttpPost("authenticate")]
+        public IActionResult Authenticate(AuthenticateRequestDTO user)
+        {
+            var response = _userService.AuthenticateUser(user);
+
+            if (response == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+
+            return Ok(response);
         }
         
     }

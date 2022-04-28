@@ -1,3 +1,4 @@
+using InterviewHelper.Core.Helper;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.DataAccess.Repositories;
@@ -15,7 +16,7 @@ builder.Services.AddCors(options =>
 }); // cors enabling
 
 // Add services to the container.
-
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

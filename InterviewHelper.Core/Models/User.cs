@@ -1,4 +1,6 @@
-﻿namespace InterviewHelper.Core.Models
+﻿using System.Text.Json.Serialization;
+
+namespace InterviewHelper.Core.Models
 {
     public class User
     {
@@ -6,6 +8,7 @@
         public DateTime CreationDate { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        [JsonIgnore]
         public byte[] Password { get; set; }
 
         public User()
