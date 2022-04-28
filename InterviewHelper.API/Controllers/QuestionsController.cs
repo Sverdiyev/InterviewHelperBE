@@ -2,28 +2,30 @@ using System.Net;
 using InterviewHelper.Core.Exceptions;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InterviewHelper.Api.Controllers
 {
     [ApiController]
+    
     [Route("[controller]")]
     public class QuestionsController : ControllerBase
     {
         private readonly ILogger<QuestionsController> _logger;
-        private readonly IQuestionsServices _questionsServices;
+        private readonly IQuestionsService _questionsService;
 
         public QuestionsController(ILogger<QuestionsController> logger,
-            IQuestionsServices questionsServices)
+            IQuestionsService questionsService)
         {
             _logger = logger;
-            _questionsServices = questionsServices;
+            _questionsService = questionsService;
         }
 
         [HttpGet]
         public IActionResult GetQuestions(string? search)
         {
-            return Ok(_questionsServices.GetQuestions(search));
+            return Ok(_questionsService.GetQuestions(search));
         }
 
         [HttpPost]
@@ -31,7 +33,7 @@ namespace InterviewHelper.Api.Controllers
         {
             try
             {
-                _questionsServices.AddQuestion(newQuestion);
+                _questionsService.AddQuestion(newQuestion);
                 return Ok();
             }
             catch (Exception ex)
@@ -45,12 +47,26 @@ namespace InterviewHelper.Api.Controllers
         {
             try
             {
-                await _questionsServices.UpdateQuestion(updatedQuestion);
+                await _questionsService.UpdateQuestion(updatedQuestion);
                 return Ok();
             }
             catch (QuestionNotFoundException ex)
             {
                 return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpDelete("{questionId:int}")]
+        public IActionResult DeleteQuestion(int questionId)
+        {
+            try
+            {
+                _questionsService.DeleteQuestion(questionId);
+                return Ok();
             }
             catch (Exception ex)
             {

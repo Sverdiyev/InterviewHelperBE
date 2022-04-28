@@ -21,7 +21,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IQuestionsServices, QuestionsServices>();
+builder.Services.AddScoped<IQuestionsService, QuestionsService>();
 builder.Services.Configure<DBConfiguration>(builder.Configuration.GetSection("Database"));
 
 InitializationService.Init(builder.Configuration.GetValue<string>("Database:ConnectionString"));
