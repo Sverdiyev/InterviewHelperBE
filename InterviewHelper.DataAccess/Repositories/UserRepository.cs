@@ -1,4 +1,6 @@
-﻿using InterviewHelper.Core.Exceptions;
+﻿using System.Linq;
+using System.Text;
+using InterviewHelper.Core.Exceptions;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.DataAccess.Data;
@@ -55,7 +57,9 @@ public class UserRepository : IUserRepository
     public User GetUserWithDetails(string userEmail, byte[] userPassword)
     {
         using var context = new InterviewHelperContext(_connectionString);
+
+        var stringVersionPassword = Encoding.ASCII.GetString(userPassword);
         
-        return context.Users.FirstOrDefault(u => u.Email == userEmail && u.Password == userPassword);
+        return context.Users.FirstOrDefault(u => u.Email == userEmail && u.Password == stringVersionPassword);
     }
 }

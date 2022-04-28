@@ -7,6 +7,7 @@ using InterviewHelper.Core.Helper;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.Models.AuthenticationModels;
 using InterviewHelper.Core.ServiceContracts;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,18 +17,28 @@ public class UserService
 {
     private readonly IUserRepository _userRepository;
     private readonly HashAlgorithm _sha;
-    private readonly AppSettings _appSettings;
+    private readonly string _secret;
 
-    public UserService(IUserRepository userRepository, IOptions<AppSettings> appSettings)
+    public UserService(IUserRepository userRepository, IOptions<AuthenticationSecret> configuration)
     {
         _userRepository = userRepository;
         _sha = SHA256.Create();
-        _appSettings = appSettings.Value;
+        _secret = configuration.Value.Secret;
     }
 
     public AuthenticateResponseDTO AddUser(UserDTO newUserDto)
     {
-        newUserDto.Password = _sha.ComputeHash(newUserDto.Password);
+        var potentialDbUser = _userRepository.GetUserByEmail(newUserDto.Email);
+
+        if (potentialDbUser != null)
+        {
+            throw new UnauthorizedOperation();
+        }
+
+        var byteVersionPassword = Encoding.ASCII.GetBytes(newUserDto.Password);
+        
+        newUserDto.Password = Encoding.ASCII.GetString(_sha.ComputeHash(byteVersionPassword));
+        
         var newUser = new User(newUserDto);
 
         _userRepository.AddUser(newUser);
@@ -44,10 +55,13 @@ public class UserService
 
     public AuthenticateResponseDTO AuthenticateUser(AuthenticateRequestDTO user)
     {
-        var dbUser = _userRepository.GetUserWithDetails(user.Email, _sha.ComputeHash(user.Password));
-
+        var dbUser = _userRepository.GetUserWithDetails(user.Email, _sha.ComputeHash(Encoding.ASCII.GetBytes(user.Password)));
+        
         // return null if user not found
-        if (dbUser == null) return null;
+        if (dbUser == null)
+        {
+            return null;
+        }
 
         // authentication successful so generate jwt token
         var token = GenerateJwtToken(dbUser);
@@ -68,17 +82,18 @@ public class UserService
     // helper function to generate jwt token 
     private string GenerateJwtToken(User user)
     {
-        // generate token that is valid for 7 days
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new[] {new Claim("id", user.Id.ToString())}),
-            Expires = DateTime.UtcNow.AddDays(7),
-            SigningCredentials =
-                new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));    
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);    
+    
+        var claims = new[] {
+            new Claim(JwtRegisteredClaimNames.Email, user.Email)
+        };    
+    
+        var token = new JwtSecurityToken("Devbridge.com","Devbridge.com",
+            claims,    
+            expires: DateTime.Now.AddMinutes(120),    
+            signingCredentials: credentials);    
+        
+        return new JwtSecurityTokenHandler().WriteToken(token);  
     }
 }

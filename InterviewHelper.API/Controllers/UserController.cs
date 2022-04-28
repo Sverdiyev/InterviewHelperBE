@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Security.Claims;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.Models.AuthenticationModels;
 using InterviewHelper.Services.Services;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace InterviewHelper.Api.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("[controller]")]
     public class UserController : Controller
     {
@@ -22,24 +22,26 @@ namespace InterviewHelper.Api.Controllers
             _userService = userService;
         }
 
-        [AllowAnonymous]
+        
         [HttpPost("add")]
         public IActionResult AddUser(UserDTO newUser)
         {
             try
             {
-                return Ok(_userService.AddUser(newUser));
+                var response = _userService.AddUser(newUser);
+                return Ok(response);
             }
             catch (Exception ex)
             {
                 return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
         }
-
+        [Authorize]
         [HttpPut("edit")]
-        public IActionResult EditUser(User user, HttpContext context)
+        public IActionResult EditUser(User user)
         {
-            var currentUser = context.User;
+            
+            var currentUser = this.User;
 
             try
             {
@@ -54,7 +56,7 @@ namespace InterviewHelper.Api.Controllers
                 return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
         }
-
+        
         [HttpPost("authenticate")]
         public IActionResult Authenticate(AuthenticateRequestDTO user)
         {

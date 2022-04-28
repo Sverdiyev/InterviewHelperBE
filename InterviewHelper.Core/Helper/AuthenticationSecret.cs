@@ -1,6 +1,6 @@
 ﻿namespace InterviewHelper.Core.Helper;
 
-public class AppSettings
+public class AuthenticationSecret
 {
     public string Secret { get; set; }
 }
