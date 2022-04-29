@@ -26,37 +26,38 @@ public class UserService
         _secret = configuration.Value.Secret;
     }
 
-    public AuthenticateResponseDTO AddUser(UserDTO newUserDto)
+    public AuthenticateUserResponse AddUser(UserRequest newUserRequest)
     {
-        var potentialDbUser = _userRepository.GetUserByEmail(newUserDto.Email);
+        var potentialDbUser = _userRepository.GetUserByEmail(newUserRequest.Email);
 
         if (potentialDbUser != null)
         {
             throw new UnauthorizedOperation();
         }
 
-        var byteVersionPassword = Encoding.ASCII.GetBytes(newUserDto.Password);
-        
-        newUserDto.Password = Encoding.ASCII.GetString(_sha.ComputeHash(byteVersionPassword));
-        
-        var newUser = new User(newUserDto);
+        var byteVersionPassword = Encoding.ASCII.GetBytes(newUserRequest.Password);
+
+        newUserRequest.Password = Encoding.ASCII.GetString(_sha.ComputeHash(byteVersionPassword));
+
+        var newUser = new User(newUserRequest);
 
         _userRepository.AddUser(newUser);
 
         var token = GenerateJwtToken(newUser);
 
-        return new AuthenticateResponseDTO(newUser, token);
+        return new AuthenticateUserResponse(newUser, token);
     }
 
-    public void EditUser(User user)
+    public void EditUser(UserUpdateRequest user)
     {
         _userRepository.EditUserDetails(user);
     }
 
-    public AuthenticateResponseDTO AuthenticateUser(AuthenticateRequestDTO user)
+    public AuthenticateUserResponse AuthenticateUser(AuthenticateUserRequest user)
     {
-        var dbUser = _userRepository.GetUserWithDetails(user.Email, _sha.ComputeHash(Encoding.ASCII.GetBytes(user.Password)));
-        
+        var dbUser =
+            _userRepository.GetUserWithDetails(user.Email, _sha.ComputeHash(Encoding.ASCII.GetBytes(user.Password)));
+
         // return null if user not found
         if (dbUser == null)
         {
@@ -66,7 +67,7 @@ public class UserService
         // authentication successful so generate jwt token
         var token = GenerateJwtToken(dbUser);
 
-        return new AuthenticateResponseDTO(dbUser, token);
+        return new AuthenticateUserResponse(dbUser, token);
     }
 
     public void CheckAuthority(ClaimsPrincipal authenticatedUser, int userId)
@@ -82,18 +83,19 @@ public class UserService
     // helper function to generate jwt token 
     public string GenerateJwtToken(User user)
     {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));    
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);    
-    
-        var claims = new[] {
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        var claims = new[]
+        {
             new Claim(JwtRegisteredClaimNames.Email, user.Email)
-        };    
-    
-        var token = new JwtSecurityToken("Devbridge.com","Devbridge.com",
-            claims,    
-            expires: DateTime.Now.AddMinutes(120),    
-            signingCredentials: credentials);    
-        
-        return new JwtSecurityTokenHandler().WriteToken(token);  
+        };
+
+        var token = new JwtSecurityToken(null, null,
+            claims,
+            expires: DateTime.Now.AddMinutes(120),
+            signingCredentials: credentials);
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

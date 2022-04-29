@@ -2,7 +2,7 @@
 
 namespace InterviewHelper.Core.Models.AuthenticationModels;
 
-public class AuthenticateRequestDTO
+public class AuthenticateUserRequest
 {
     [Required]
     public string Email { get; set; }

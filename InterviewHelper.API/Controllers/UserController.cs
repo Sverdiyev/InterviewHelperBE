@@ -22,13 +22,13 @@ namespace InterviewHelper.Api.Controllers
             _userService = userService;
         }
 
-        
+
         [HttpPost("add")]
-        public IActionResult AddUser(UserDTO newUser)
+        public IActionResult AddUser(UserRequest newUserRequest)
         {
             try
             {
-                var response = _userService.AddUser(newUser);
+                var response = _userService.AddUser(newUserRequest);
                 return Ok(response);
             }
             catch (Exception ex)
@@ -36,11 +36,11 @@ namespace InterviewHelper.Api.Controllers
                 return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
         [Authorize]
         [HttpPut("edit")]
-        public IActionResult EditUser(User user)
+        public IActionResult EditUser(UserUpdateRequest user)
         {
-            
             var currentUser = this.User;
 
             try
@@ -56,9 +56,9 @@ namespace InterviewHelper.Api.Controllers
                 return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
         }
-        
+
         [HttpPost("authenticate")]
-        public IActionResult Authenticate(AuthenticateRequestDTO user)
+        public IActionResult Authenticate(AuthenticateUserRequest user)
         {
             var response = _userService.AuthenticateUser(user);
 

@@ -6,7 +6,7 @@ public interface IUserRepository
 {
     User AddUser(User newUSer);
 
-    void EditUserDetails(User user);
+    void EditUserDetails(UserUpdateRequest user);
 
     User GetUserById(int userId);
 

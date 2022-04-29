@@ -2,7 +2,7 @@
 
 namespace InterviewHelper.Core.Models.AuthenticationModels;
 
-public class AuthenticateResponseDTO
+public class AuthenticateUserResponse
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -10,7 +10,7 @@ public class AuthenticateResponseDTO
     public string Token { get; set; }
 
 
-    public AuthenticateResponseDTO(User user, string token)
+    public AuthenticateUserResponse(User user, string token)
     {
         Id = user.Id;
         Name = user.Name;

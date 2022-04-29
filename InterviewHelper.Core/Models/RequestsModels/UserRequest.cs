@@ -1,6 +1,6 @@
 ﻿namespace InterviewHelper.Core.Models;
 
-public class UserDTO
+public class UserRequest
 {
     public DateTime CreationDate { get; set; }
     public string Name { get; set; }

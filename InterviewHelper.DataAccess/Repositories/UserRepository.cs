@@ -21,12 +21,12 @@ public class UserRepository : IUserRepository
     {
         using var context = new InterviewHelperContext(_connectionString);
         context.Users.Add(newUser);
-        context.SaveChangesAsync();
+        context.SaveChanges();
 
         return newUser;
     }
 
-    public void EditUserDetails(User user)
+    public void EditUserDetails(UserUpdateRequest user)
     {
         using var context = new InterviewHelperContext(_connectionString);
         var userToEdit = context.Users.FirstOrDefault(u => u.Id == user.Id);
@@ -38,6 +38,8 @@ public class UserRepository : IUserRepository
         userToEdit.Name = user.Name;
         userToEdit.Email = user.Email;
         userToEdit.Password = user.Password;
+        
+        context.SaveChanges();
     }
 
     public User GetUserById(int userId)

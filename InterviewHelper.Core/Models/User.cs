@@ -13,14 +13,13 @@ namespace InterviewHelper.Core.Models
         public User()
         {
         }
-
-        // custom DTO constructor
-        public User(UserDTO user)
+        
+        public User(UserRequest userRequest)
         {
             this.CreationDate = DateTime.Now;
-            this.Name = user.Name;
-            this.Email = user.Email;
-            this.Password = user.Password;
+            this.Name = userRequest.Name;
+            this.Email = userRequest.Email;
+            this.Password = userRequest.Password;
         }
     }
 }
