@@ -13,13 +13,5 @@ namespace InterviewHelper.Core.Models
         public User()
         {
         }
-        
-        public User(UserRequest userRequest)
-        {
-            this.CreationDate = DateTime.Now;
-            this.Name = userRequest.Name;
-            this.Email = userRequest.Email;
-            this.Password = userRequest.Password;
-        }
     }
 }

@@ -28,9 +28,9 @@ public class UserService
 
     public AuthenticateUserResponse AddUser(UserRequest newUserRequest)
     {
-        var potentialDbUser = _userRepository.GetUserByEmail(newUserRequest.Email);
+        var userAlreadyExists = _userRepository.GetUserByEmail(newUserRequest.Email);
 
-        if (potentialDbUser != null)
+        if (userAlreadyExists != null)
         {
             throw new UnauthorizedOperation();
         }
@@ -39,7 +39,13 @@ public class UserService
 
         newUserRequest.Password = Encoding.ASCII.GetString(_sha.ComputeHash(byteVersionPassword));
 
-        var newUser = new User(newUserRequest);
+        var newUser = new User
+        {
+            CreationDate = DateTime.Now,
+            Email = newUserRequest.Email,
+            Name = newUserRequest.Name,
+            Password = newUserRequest.Password
+        };
 
         _userRepository.AddUser(newUser);
 
