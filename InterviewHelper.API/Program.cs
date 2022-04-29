@@ -24,8 +24,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {    
         options.TokenValidationParameters = new TokenValidationParameters    
         {    
-            ValidateIssuer = false,    
-            ValidateAudience = false,    
+            ValidateIssuer = true,    
+            ValidateAudience = true,    
             ValidateLifetime = true,  
             ValidateIssuerSigningKey = true,
             ValidIssuer = "Devbridge.com",    
@@ -84,9 +84,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapControllers();
 

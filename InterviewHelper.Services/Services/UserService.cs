@@ -80,7 +80,7 @@ public class UserService
     }
 
     // helper function to generate jwt token 
-    private string GenerateJwtToken(User user)
+    public string GenerateJwtToken(User user)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));    
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);    
