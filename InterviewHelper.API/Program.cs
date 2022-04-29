@@ -37,7 +37,6 @@ builder.Services.Configure<AuthenticationSecret>(builder.Configuration.GetSectio
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-// adding jwt support for swagger for testing purposes
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IQuestionsServices, QuestionsServices>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
