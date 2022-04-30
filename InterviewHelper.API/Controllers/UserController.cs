@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.Models.AuthenticationModels;
+using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ namespace InterviewHelper.Api.Controllers
     [Route("[controller]")]
     public class UserController : Controller
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
         private readonly ILogger<UserController> _logger;
 
         public UserController(ILogger<UserController> logger,

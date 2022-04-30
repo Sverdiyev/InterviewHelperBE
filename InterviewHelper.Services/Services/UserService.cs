@@ -7,19 +7,19 @@ using InterviewHelper.Core.Helper;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.Models.AuthenticationModels;
 using InterviewHelper.Core.ServiceContracts;
-using Microsoft.Extensions.Configuration;
+using InterviewHelper.DataAccess.Repositories;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace InterviewHelper.Services.Services;
 
-public class UserService
+public class UserService : IUserService
 {
-    private readonly IUserRepository _userRepository;
+    private readonly UserRepository _userRepository;
     private readonly HashAlgorithm _sha;
     private readonly string _secret;
 
-    public UserService(IUserRepository userRepository, IOptions<AuthenticationSecret> configuration)
+    public UserService(UserRepository userRepository, IOptions<AuthenticationSecret> configuration)
     {
         _userRepository = userRepository;
         _sha = SHA256.Create();
@@ -66,7 +66,6 @@ public class UserService
         var dbUser =
             _userRepository.GetUserWithDetails(user.Email, _sha.ComputeHash(Encoding.ASCII.GetBytes(user.Password)));
 
-        // return null if user not found
         if (dbUser == null)
         {
             return null;
@@ -113,7 +112,7 @@ public class UserService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    private void CheckIfEmailExists(string userEmail)
+    public void CheckIfEmailExists(string userEmail)
     {
         var userAlreadyExists = _userRepository.GetUserByEmail(userEmail);
 

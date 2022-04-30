@@ -1,14 +1,12 @@
-﻿using System.Linq;
-using System.Text;
+﻿using System.Text;
 using InterviewHelper.Core.Exceptions;
 using InterviewHelper.Core.Models;
-using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.DataAccess.Data;
 using Microsoft.Extensions.Options;
 
 namespace InterviewHelper.DataAccess.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository
 {
     private readonly string _connectionString;
 
@@ -38,21 +36,21 @@ public class UserRepository : IUserRepository
         userToEdit.Name = user.Name;
         userToEdit.Email = user.Email;
         userToEdit.Password = user.Password;
-        
+
         context.SaveChanges();
     }
 
     public User GetUserById(int userId)
     {
         using var context = new InterviewHelperContext(_connectionString);
-        
-        return context.Users.FirstOrDefault(u => u.Id == userId); ;
+
+        return context.Users.FirstOrDefault(u => u.Id == userId);
     }
 
     public User GetUserByEmail(string userEmail)
     {
         using var context = new InterviewHelperContext(_connectionString);
-        
+
         return context.Users.FirstOrDefault(u => u.Email == userEmail);
     }
 
@@ -61,7 +59,7 @@ public class UserRepository : IUserRepository
         using var context = new InterviewHelperContext(_connectionString);
 
         var stringVersionPassword = Encoding.ASCII.GetString(userPassword);
-        
+
         return context.Users.FirstOrDefault(u => u.Email == userEmail && u.Password == stringVersionPassword);
     }
 }
