@@ -13,4 +13,8 @@
     <Folder Include="ServiceContracts\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="RazorEngine" Version="3.1.0" />
+  </ItemGroup>
+
 </Project>

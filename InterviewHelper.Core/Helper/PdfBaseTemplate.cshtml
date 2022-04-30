@@ -1,0 +1,17 @@
+﻿<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <title>Interview Helper Questions</title>
+</head>
+<body>
+
+<h1>Interview Helper</h1><br/>
+<h3>Interviewee Id : @Model.IntervieweeId</h3> 
+<h3>Interviewee Date : @Model.InterviewDate</h3> 
+<h3>Interviewee Position : @Model.IntervieweePosition</h3> 
+
+<br>
+@foreach(string question in @Model.Questions)
+{<p>@question</p>}
+</body>
+</html>
