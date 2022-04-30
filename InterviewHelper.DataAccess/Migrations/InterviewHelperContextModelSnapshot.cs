@@ -64,7 +64,7 @@ namespace InterviewHelper.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("QuestionId")
+                    b.Property<int>("QuestionId")
                         .HasColumnType("int");
 
                     b.Property<string>("TagName")
@@ -75,14 +75,16 @@ namespace InterviewHelper.DataAccess.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Tag");
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("InterviewHelper.Core.Models.Tag", b =>
                 {
                     b.HasOne("InterviewHelper.Core.Models.Question", null)
                         .WithMany("Tags")
-                        .HasForeignKey("QuestionId");
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("InterviewHelper.Core.Models.Question", b =>
