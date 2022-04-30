@@ -1,17 +1,79 @@
 ﻿<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8"/>
-    <title>Interview Helper Questions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <style>
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: grey;
+  color: white;
+  text-align: center;
+}
+</style><title>interview</title>
 </head>
-<body>
+<body style="font-family:Tahoma,serif;font-size:12px;color: #333333;background-color:#FFFFFF;">
+<table align="center" border="0" cellpadding="0" cellspacing="0" style="height:842px; width:595px;font-size:12px;">
+<tr>
+<td valign="top">
+<table width="100%" cellspacing="0" cellpadding="0">
+    <tr>
+        <td valign="bottom" width="50%" height="50">
+            <div align="left" style="text-align: center">
+                <h1>Interview Helper</h1>
+            </div><br/>
+        </td>
 
-<h1>Interview Helper</h1><br/>
-<h3>Interviewee Id : @Model.IntervieweeId</h3> 
-<h3>Interviewee Date : @Model.InterviewDate</h3> 
-<h3>Interviewee Position : @Model.IntervieweePosition</h3> 
+        <td width="50%">&nbsp;</td>
+    </tr>
+</table><br/><br/>
+<table width="100%" cellspacing="0" cellpadding="0">
+    <tr>
+        <td valign="top" width="35%" style="font-size:12px;">
+            <strong >Interviewee ID : @Model.IntervieweeId</strong><br/>
+            <strong >Position : @Model.IntervieweePosition</strong><br/>
 
-<br>
-@foreach(string question in @Model.Questions)
-{<p>@question</p>}
+
+        </td>
+        <td valign="top" width="35%">
+        </td>
+        <td valign="top" width="30%" style="font-size:12px;">
+            <strong >Interview Date : @Model.InterviewDate</strong><br/>
+
+        </td>
+
+    </tr>
+</table>
+<table width="100%" height="100" cellspacing="0" cellpadding="0">
+    <tr>
+        <td>
+            <div align="center" style="font-size: 14px;font-weight: bold;">Interview Questions </div>
+        </td>
+    </tr>
+</table>
+<table width="100%" cellspacing="0" cellpadding="2" border="1" bordercolor="#CCCCCC">
+    <tr>
+
+        <td width="35%" bordercolor="#ccc" bgcolor="#f2f2f2" style="font-size:12px;text-align:center">
+            <strong>Question content </strong>
+        </td>
+
+    </tr>
+    
+
+        @foreach (var question in Model.Questions)
+        {
+            <tr >
+            <td valign="top" style="font-size:12px; ">@question</td>
+            </tr>
+        }
+
+</table>
+
+</table>
 </body>
+<div class="footer">
+    <p>copyright 2022 Devbridge interviewHelper</p>
+</div>
 </html>
