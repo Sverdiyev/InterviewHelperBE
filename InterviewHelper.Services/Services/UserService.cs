@@ -28,12 +28,7 @@ public class UserService
 
     public AuthenticateUserResponse AddUser(UserRequest newUserRequest)
     {
-        var userAlreadyExists = _userRepository.GetUserByEmail(newUserRequest.Email);
-
-        if (userAlreadyExists != null)
-        {
-            throw new UnauthorizedOperation();
-        }
+        CheckIfEmailExists(newUserRequest.Email);
 
         var byteVersionPassword = Encoding.ASCII.GetBytes(newUserRequest.Password);
 
@@ -51,11 +46,18 @@ public class UserService
 
         var token = GenerateJwtToken(newUser);
 
-        return new AuthenticateUserResponse(newUser, token);
+        return new AuthenticateUserResponse
+        {
+            Id = newUser.Id,
+            Name = newUser.Name,
+            Email = newUser.Email,
+            Token = token
+        };
     }
 
     public void EditUser(UserUpdateRequest user)
     {
+        CheckIfEmailExists(user.Email);
         _userRepository.EditUserDetails(user);
     }
 
@@ -73,7 +75,13 @@ public class UserService
         // authentication successful so generate jwt token
         var token = GenerateJwtToken(dbUser);
 
-        return new AuthenticateUserResponse(dbUser, token);
+        return new AuthenticateUserResponse
+        {
+            Id = dbUser.Id,
+            Name = dbUser.Name,
+            Email = dbUser.Email,
+            Token = token
+        };
     }
 
     public void CheckAuthority(ClaimsPrincipal authenticatedUser, int userId)
@@ -82,7 +90,7 @@ public class UserService
 
         if (dbUser.Id != userId)
         {
-            throw new UnauthorizedOperation();
+            throw new UnauthorizedOperationException();
         }
     }
 
@@ -103,5 +111,15 @@ public class UserService
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private void CheckIfEmailExists(string userEmail)
+    {
+        var userAlreadyExists = _userRepository.GetUserByEmail(userEmail);
+
+        if (userAlreadyExists != null)
+        {
+            throw new UnauthorizedOperationException();
+        }
     }
 }

@@ -4,7 +4,7 @@ namespace InterviewHelper.Core.ServiceContracts;
 
 public interface IUserRepository
 {
-    User AddUser(User newUSer);
+    User AddUser(User newUser);
 
     void EditUserDetails(UserUpdateRequest user);
 
