@@ -5,17 +5,12 @@ namespace InterviewHelper.DataAccess.Data
 {
     public class InterviewHelperContext : DbContext
     {
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Question>()
-                .HasMany(c => c.Tags);
-        }
-
         private readonly string _connectionString;
 
         public InterviewHelperContext()
         {
-            _connectionString = "DataSource=../InterviewHelper.DataAccess/Data/app.db";
+            _connectionString =
+                "Server=20.86.255.178;Database=InterviewHelperStaging;User Id=sa;Password=763594HAZS28LQxc;";
         }
 
         public InterviewHelperContext(string connectionString)
@@ -29,8 +24,9 @@ namespace InterviewHelper.DataAccess.Data
         }
 
         public DbSet<Question> Questions { get; set; }
+        public DbSet<Tag> Tags { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite(_connectionString);
+            => options.UseSqlServer(_connectionString);
     }
 }
