@@ -41,7 +41,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IQuestionsServices, QuestionsServices>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<UserRepository>();
 builder.Services.Configure<DBConfiguration>(builder.Configuration.GetSection("Database"));
 
 InitializationService.Init(builder.Configuration.GetValue<string>("Database:ConnectionString"));
