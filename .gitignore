@@ -59,5 +59,3 @@ Thumbs.db
 /InterviewHelper.Services/bin
 /InterviewHelper.Core/obj
 /InterviewHelper.Core/bin
-InterviewHelper.DataAccess/Data/app.db-shm
-InterviewHelper.DataAccess/Data/app.db-wal

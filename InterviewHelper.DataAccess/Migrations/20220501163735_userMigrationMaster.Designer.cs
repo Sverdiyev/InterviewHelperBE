@@ -4,6 +4,7 @@ using InterviewHelper.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InterviewHelper.DataAccess.Migrations
 {
     [DbContext(typeof(InterviewHelperContext))]
-    partial class InterviewHelperContextModelSnapshot : ModelSnapshot
+    [Migration("20220501163735_userMigrationMaster")]
+    partial class userMigrationMaster
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +55,7 @@ namespace InterviewHelper.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("InterviewHelper.Core.Models.Tag", b =>
@@ -75,7 +77,7 @@ namespace InterviewHelper.DataAccess.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Tags", (string)null);
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("InterviewHelper.Core.Models.User", b =>
