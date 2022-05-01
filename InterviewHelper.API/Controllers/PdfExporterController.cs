@@ -25,6 +25,6 @@ public class PdfController : Controller
         var razorContent = System.IO.File.ReadAllText("../InterviewHelper.Core/Helper/PdfBaseTemplate.cshtml",
             System.Text.Encoding.UTF8);
 
-        return RazorEngine.Engine.Razor.RunCompile(razorContent, viewName, typeof(PdfExporterModel), model);
+        return Engine.Razor.RunCompile(razorContent, viewName, typeof(PdfExporterModel), model);
     }
 }
