@@ -53,7 +53,7 @@ namespace InterviewHelper.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("InterviewHelper.Core.Models.Tag", b =>
@@ -75,7 +75,7 @@ namespace InterviewHelper.DataAccess.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("InterviewHelper.Core.Models.User", b =>
