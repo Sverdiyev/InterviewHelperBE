@@ -25,6 +25,7 @@ namespace InterviewHelper.DataAccess.Data
 
         public DbSet<Question> Questions { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlServer(_connectionString);
