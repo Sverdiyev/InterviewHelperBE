@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace InterviewHelper.Api.Controllers
 {
     [ApiController]
-    
     [Route("[controller]")]
     public class QuestionsController : ControllerBase
     {
@@ -70,7 +69,7 @@ namespace InterviewHelper.Api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+                return BadRequest();
             }
         }
     }
