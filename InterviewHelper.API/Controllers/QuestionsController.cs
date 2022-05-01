@@ -73,7 +73,7 @@ namespace InterviewHelper.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
         }
     }
