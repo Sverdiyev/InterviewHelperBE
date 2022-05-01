@@ -7,11 +7,11 @@ using Microsoft.Extensions.Options;
 
 namespace InterviewHelper.Services.Services;
 
-public class QuestionsServices : IQuestionsServices
+public class QuestionsService : IQuestionsService
 {
     private readonly string _connectionString;
 
-    public QuestionsServices(IOptions<DBConfiguration> config)
+    public QuestionsService(IOptions<DBConfiguration> config)
     {
         _connectionString = config.Value.ConnectionString;
     }
@@ -78,14 +78,16 @@ public class QuestionsServices : IQuestionsServices
         }
     }
 
-    public List<string> GetQuestionsByIds(List<int> questionIds)
+    public void DeleteQuestion(int questionId)
     {
-        using (var context = new InterviewHelperContext(_connectionString))
+        using var context = new InterviewHelperContext(_connectionString);
+        var question = context.Questions.FirstOrDefault(q => q.Id == questionId);
+        if (question == null)
         {
-            var questionsContents = context.Questions.Where(question => questionIds.Contains(question.Id)).
-                Select(question => question.QuestionContent).ToList();
-            
-            return questionsContents ==  null ? throw new QuestionNotFoundException() : questionsContents;
+            throw new QuestionNotFoundException();
         }
+
+        context.Remove(question);
+        context.SaveChanges();
     }
 }

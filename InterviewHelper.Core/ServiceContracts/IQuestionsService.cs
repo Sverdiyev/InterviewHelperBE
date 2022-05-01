@@ -2,10 +2,10 @@ using InterviewHelper.Core.Models;
 
 namespace InterviewHelper.Core.ServiceContracts;
 
-public interface IQuestionsServices
+public interface IQuestionsService
 {
     Task AddQuestion(RequestQuestion newQuestion);
     List<Question> GetQuestions(string? searchParam);
     Task UpdateQuestion(RequestQuestion updatedQuestion);
-    List<string> GetQuestionsByIds(List<int> questionIds);
+    void DeleteQuestion(int questionId);
 }
