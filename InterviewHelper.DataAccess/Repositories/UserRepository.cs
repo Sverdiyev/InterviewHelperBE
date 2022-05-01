@@ -17,49 +17,49 @@ public class UserRepository
 
     public User AddUser(User newUser)
     {
-        using var context = new InterviewHelperContext(_connectionString);
-        context.Users.Add(newUser);
-        context.SaveChanges();
+        using (var context = new InterviewHelperContext(_connectionString))
+        {
+            context.Users.Add(newUser);
+            context.SaveChanges();
 
-        return newUser;
+            return newUser;
+        }
     }
 
     public void EditUserDetails(UserUpdateRequest user)
     {
-        using var context = new InterviewHelperContext(_connectionString);
-        var userToEdit = context.Users.FirstOrDefault(u => u.Id == user.Id);
-        if (userToEdit == null)
+        using (var context = new InterviewHelperContext(_connectionString))
         {
-            throw new UserNotFoundException();
+            var userToEdit = context.Users.First(u => u.Id == user.Id);
+
+            userToEdit.Name = user.Name;
+            userToEdit.Password = user.Password;
+
+            context.SaveChanges();
         }
-
-        userToEdit.Name = user.Name;
-        userToEdit.Email = user.Email;
-        userToEdit.Password = user.Password;
-
-        context.SaveChanges();
     }
 
-    public User GetUserById(int userId)
+    public bool UserExists(string email)
     {
-        using var context = new InterviewHelperContext(_connectionString);
-
-        return context.Users.FirstOrDefault(u => u.Id == userId);
+        using (var context = new InterviewHelperContext(_connectionString))
+        {
+            return context.Users.Any(u => u.Email == email);
+        }
     }
 
-    public User GetUserByEmail(string userEmail)
+    public bool ValidUser(string email, string encriptedPassword)
     {
-        using var context = new InterviewHelperContext(_connectionString);
-
-        return context.Users.FirstOrDefault(u => u.Email == userEmail);
+        using (var context = new InterviewHelperContext(_connectionString))
+        {
+            return context.Users.Any(u => u.Email == email && u.Password == encriptedPassword);
+        }
     }
 
-    public User GetUserWithDetails(string userEmail, byte[] userPassword)
+    public User GetUser(string email)
     {
-        using var context = new InterviewHelperContext(_connectionString);
-
-        var stringVersionPassword = Encoding.ASCII.GetString(userPassword);
-
-        return context.Users.FirstOrDefault(u => u.Email == userEmail && u.Password == stringVersionPassword);
+        using (var context = new InterviewHelperContext(_connectionString))
+        {
+            return context.Users.First(_ => _.Email == email);
+        } 
     }
 }

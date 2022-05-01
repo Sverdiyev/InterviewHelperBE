@@ -26,20 +26,21 @@ public class UserService : IUserService
         _secret = configuration.Value.Secret;
     }
 
-    public AuthenticateUserResponse AddUser(UserRequest newUserRequest)
+    public AuthenticateUserResponse AddUser(UserRequest user)
     {
-        CheckIfEmailExists(newUserRequest.Email);
+        if (_userRepository.UserExists(user.Email))
+            throw new Exception("User with the same email already exists.");
 
-        var byteVersionPassword = Encoding.ASCII.GetBytes(newUserRequest.Password);
+        var byteVersionPassword = Encoding.ASCII.GetBytes(user.Password);
 
-        newUserRequest.Password = Encoding.ASCII.GetString(_sha.ComputeHash(byteVersionPassword));
+        user.Password = Encoding.ASCII.GetString(_sha.ComputeHash(byteVersionPassword));
 
         var newUser = new User
         {
             CreationDate = DateTime.Now,
-            Email = newUserRequest.Email,
-            Name = newUserRequest.Name,
-            Password = newUserRequest.Password
+            Email = user.Email,
+            Name = user.Name,
+            Password = user.Password
         };
 
         _userRepository.AddUser(newUser);
@@ -57,44 +58,34 @@ public class UserService : IUserService
 
     public void EditUser(UserUpdateRequest user)
     {
-        CheckIfEmailExists(user.Email);
+        if (!_userRepository.UserExists(user.Email))
+            throw new UserNotFoundException();
+
         _userRepository.EditUserDetails(user);
     }
 
-    public AuthenticateUserResponse AuthenticateUser(AuthenticateUserRequest user)
+    public AuthenticateUserResponse AuthenticateUser(AuthenticateUserRequest userRequest)
     {
-        var dbUser =
-            _userRepository.GetUserWithDetails(user.Email, _sha.ComputeHash(Encoding.ASCII.GetBytes(user.Password)));
+        if (!_userRepository.UserExists(userRequest.Email))
+            throw new Exception("Given user does not exists");
 
-        if (dbUser == null)
-        {
-            return null;
-        }
+        var successfullLogIn = _userRepository.ValidUser(userRequest.Email, userRequest.Password);
 
-        // authentication successful so generate jwt token
-        var token = GenerateJwtToken(dbUser);
+        if (!successfullLogIn)
+            throw new AuthenticationFailedException();
+
+        var user = _userRepository.GetUser(userRequest.Email);
 
         return new AuthenticateUserResponse
         {
-            Id = dbUser.Id,
-            Name = dbUser.Name,
-            Email = dbUser.Email,
-            Token = token
+            Id = user.Id,
+            Name = user.Name,
+            Email = user.Email,
+            Token = GenerateJwtToken(user)
         };
     }
 
-    public void CheckAuthority(ClaimsPrincipal authenticatedUser, int userId)
-    {
-        var dbUser = _userRepository.GetUserByEmail(authenticatedUser.FindFirst(ClaimTypes.Email).Value);
-
-        if (dbUser.Id != userId)
-        {
-            throw new UnauthorizedOperationException();
-        }
-    }
-
-    // helper function to generate jwt token 
-    public string GenerateJwtToken(User user)
+    private string GenerateJwtToken(User user)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -105,20 +96,10 @@ public class UserService : IUserService
         };
 
         var token = new JwtSecurityToken(null, null,
-            claims,
-            expires: DateTime.Now.AddMinutes(120),
-            signingCredentials: credentials);
+                                        claims,
+                                        expires: DateTime.Now.AddMinutes(20),
+                                        signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
-    }
-
-    public void CheckIfEmailExists(string userEmail)
-    {
-        var userAlreadyExists = _userRepository.GetUserByEmail(userEmail);
-
-        if (userAlreadyExists != null)
-        {
-            throw new UnauthorizedOperationException();
-        }
     }
 }

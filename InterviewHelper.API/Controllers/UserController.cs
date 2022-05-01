@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using System.Security.Claims;
+using InterviewHelper.Core.Exceptions;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.Models.AuthenticationModels;
 using InterviewHelper.Core.ServiceContracts;
-using InterviewHelper.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,8 +16,7 @@ namespace InterviewHelper.Api.Controllers
         private readonly IUserService _userService;
         private readonly ILogger<UserController> _logger;
 
-        public UserController(ILogger<UserController> logger,
-            UserService userService)
+        public UserController(ILogger<UserController> logger, IUserService userService)
         {
             _logger = logger;
             _userService = userService;
@@ -25,16 +24,16 @@ namespace InterviewHelper.Api.Controllers
 
 
         [HttpPost("add")]
-        public IActionResult AddUser(UserRequest newUserRequest)
+        public IActionResult AddUser(UserRequest user)
         {
             try
             {
-                var response = _userService.AddUser(newUserRequest);
+                var response = _userService.AddUser(user);
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -42,31 +41,41 @@ namespace InterviewHelper.Api.Controllers
         [HttpPut("edit")]
         public IActionResult EditUser(UserUpdateRequest user)
         {
-            var currentUser = this.User;
+            var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
+
+            if (userSessionEmail != user.Email)
+                return BadRequest("User is not authorized to perform this action");
 
             try
             {
-                // throws exception if the authenticated user is not the one editing
-                _userService.CheckAuthority(currentUser, user.Id);
-
                 _userService.EditUser(user);
                 return Ok();
             }
+            catch(UserNotFoundException)
+            {
+                return BadRequest("User not found");
+            }
             catch (Exception ex)
             {
-                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
         [HttpPost("authenticate")]
         public IActionResult Authenticate(AuthenticateUserRequest user)
         {
-            var response = _userService.AuthenticateUser(user);
-
-            if (response == null)
-                return BadRequest(new {message = "Username or password is incorrect"});
-
-            return Ok(response);
-        }
+            try
+            {
+                return Ok(_userService.AuthenticateUser(user));
+            }
+            catch (AuthenticationFailedException)
+            {
+                return BadRequest(new { message = "Username or password is incorrect" });
+            }
+            catch(Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+         }
     }
 }
