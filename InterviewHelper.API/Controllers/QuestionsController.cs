@@ -67,6 +67,10 @@ namespace InterviewHelper.Api.Controllers
                 _questionsService.DeleteQuestion(questionId);
                 return Ok();
             }
+            catch (QuestionNotFoundException)
+            {
+                return BadRequest(new {message = "Question not found"});
+            }
             catch (Exception ex)
             {
                 return BadRequest();
