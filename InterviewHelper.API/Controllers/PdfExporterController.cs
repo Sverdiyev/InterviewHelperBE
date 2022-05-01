@@ -11,9 +11,9 @@ namespace InterviewHelper.Api.Controllers;
 [Route("[controller]")]
 public class PdfController : Controller
 {
-    private readonly IQuestionsServices _questionsService;
+    private readonly IQuestionsService _questionsService;
 
-    public PdfController(IQuestionsServices questionsService)
+    public PdfController(IQuestionsService questionsService)
     {
         _questionsService = questionsService;
     }
