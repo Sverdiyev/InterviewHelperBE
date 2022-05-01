@@ -31,15 +31,15 @@
 <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
         <td valign="top" width="35%" style="font-size:12px;">
-            <strong >Interviewee ID : @Model.IntervieweeId</strong><br/>
-            <strong >Position : @Model.IntervieweePosition</strong><br/>
+            <strong >Position : </strong>{ZPXF88jaM2nFuBnhmXo0}<br/>
 
 
         </td>
         <td valign="top" width="35%">
         </td>
         <td valign="top" width="30%" style="font-size:12px;">
-            <strong >Interview Date : @Model.InterviewDate</strong><br/>
+            <strong >Interview Date : </strong>{gHk4UMD5mMe9hvQ3VUn0}<br/>
+            <strong >Interview Time : </strong>{wR4C4o25BUbyvg0yZNJh}<br/>
 
         </td>
 
@@ -60,15 +60,7 @@
         </td>
 
     </tr>
-    
-
-        @foreach (var question in Model.Questions)
-        {
-            <tr >
-            <td valign="top" style="font-size:12px; ">@question</td>
-            </tr>
-        }
-
+        {0CZVLarSAJX4pyWsOWtB}
 </table>
 
 </table>

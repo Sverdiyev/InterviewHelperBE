@@ -1,9 +1,8 @@
-﻿using System.Drawing;
+﻿using System.Text;
 using InterviewHelper.Core.Models.PdfExporterModels;
 using InterviewHelper.Core.ServiceContracts;
 using Microsoft.AspNetCore.Mvc;
-using RazorEngine;
-using RazorEngine.Templating;
+
 
 namespace InterviewHelper.Api.Controllers;
 
@@ -22,23 +21,33 @@ public class PdfController : Controller
     public IActionResult DownloadPdfFile(PdfExporterModelRequest modelRequest)
     {
         IronPdf.Installation.LinuxAndDockerDependenciesAutoConfig = true;
+        var html = RenderHtmlViewToString(modelRequest);
+        var ironPdfRender = new IronPdf.ChromePdfRenderer();
+        using var pdfDoc = ironPdfRender.RenderHtmlAsPdf(html);
+        return File(pdfDoc.Stream.ToArray(), "application/pdf");
+    }
+
+    private string RenderHtmlViewToString(PdfExporterModelRequest modelRequest)
+    {
+        var htmlPdf = System.IO.File.ReadAllText("../InterviewHelper.Core/Helper/PdfBaseTemplate.txt",
+            System.Text.Encoding.UTF8);
+        
+        var questionItem = "<tr ><td valign={0} style={1}>{2}</td></tr>";
+        var questionsBlock = "";
         var model = new PdfExporterModel()
         {
             InterviewDate = modelRequest.InterviewDate,
             IntervieweePosition = modelRequest.IntervieweePosition,
             Questions = _questionsService.GetQuestionsByIds(modelRequest.Questions)
         };
-        var html = RenderRazorViewToString("myQuestionPdf", model);
-        var ironPdfRender = new IronPdf.ChromePdfRenderer();
-        using var pdfDoc = ironPdfRender.RenderHtmlAsPdf(html);
-        return File(pdfDoc.Stream.ToArray(), "application/pdf");
-    }
-
-    private static string RenderRazorViewToString(string viewName, PdfExporterModel model)
-    {
-        var razorContent = System.IO.File.ReadAllText("../InterviewHelper.Core/Helper/PdfBaseTemplate.cshtml",
-            System.Text.Encoding.UTF8);
-
-        return Engine.Razor.RunCompile(razorContent, viewName, typeof(PdfExporterModel), model);
+        foreach (var question in model.Questions)
+        {
+            questionsBlock += string.Format(questionItem,"top", "font-size:12px;", question);
+        }
+        htmlPdf = htmlPdf.Replace("{ZPXF88jaM2nFuBnhmXo0}", model.IntervieweePosition);
+        htmlPdf = htmlPdf.Replace("{gHk4UMD5mMe9hvQ3VUn0}", model.InterviewDate.ToShortDateString());
+        htmlPdf = htmlPdf.Replace("{wR4C4o25BUbyvg0yZNJh}", model.InterviewDate.ToShortTimeString());
+        htmlPdf = htmlPdf.Replace("{0CZVLarSAJX4pyWsOWtB}", questionsBlock);
+        return htmlPdf;
     }
 }
