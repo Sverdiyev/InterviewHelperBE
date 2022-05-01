@@ -7,4 +7,5 @@ public interface IQuestionsServices
     Task AddQuestion(RequestQuestion newQuestion);
     List<Question> GetQuestions(string? searchParam);
     Task UpdateQuestion(RequestQuestion updatedQuestion);
+    List<string> GetQuestionsByIds(List<int> questionIds);
 }

@@ -77,4 +77,15 @@ public class QuestionsServices : IQuestionsServices
             await context.SaveChangesAsync();
         }
     }
+
+    public List<string> GetQuestionsByIds(List<int> questionIds)
+    {
+        using (var context = new InterviewHelperContext(_connectionString))
+        {
+            var questionsContents = context.Questions.Where(question => questionIds.Contains(question.Id)).
+                Select(question => question.QuestionContent).ToList();
+            
+            return questionsContents ==  null ? throw new QuestionNotFoundException() : questionsContents;
+        }
+    }
 }

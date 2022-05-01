@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using InterviewHelper.Core.Models.PdfExporterModels;
+using InterviewHelper.Core.ServiceContracts;
 using Microsoft.AspNetCore.Mvc;
 using RazorEngine;
 using RazorEngine.Templating;
@@ -10,10 +11,23 @@ namespace InterviewHelper.Api.Controllers;
 [Route("[controller]")]
 public class PdfController : Controller
 {
+    private readonly IQuestionsServices _questionsService;
+
+    public PdfController(IQuestionsServices questionsService)
+    {
+        _questionsService = questionsService;
+    }
+
     [HttpPost]
-    public IActionResult DownloadPdfFile(PdfExporterModel model)
+    public IActionResult DownloadPdfFile(PdfExporterModelRequest modelRequest)
     {
         IronPdf.Installation.LinuxAndDockerDependenciesAutoConfig = true;
+        var model = new PdfExporterModel()
+        {
+            InterviewDate = modelRequest.InterviewDate,
+            IntervieweePosition = modelRequest.IntervieweePosition,
+            Questions = _questionsService.GetQuestionsByIds(modelRequest.Questions)
+        };
         var html = RenderRazorViewToString("myQuestionPdf", model);
         var ironPdfRender = new IronPdf.ChromePdfRenderer();
         using var pdfDoc = ironPdfRender.RenderHtmlAsPdf(html);
