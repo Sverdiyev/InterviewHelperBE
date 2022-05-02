@@ -27,7 +27,7 @@ namespace InterviewHelper.Api.Controllers
             return Ok(_questionsService.GetQuestions(search));
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public IActionResult PostAddQuestion(RequestQuestion newQuestion)
         {
             try
@@ -41,7 +41,7 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("edit")]
         public async Task<IActionResult> UpdateQuestion(RequestQuestion updatedQuestion)
         {
             try
