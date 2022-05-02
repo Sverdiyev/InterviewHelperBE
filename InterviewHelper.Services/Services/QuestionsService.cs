@@ -97,8 +97,13 @@ public class QuestionsService : IQuestionsService
         {
             var questionsContents = context.Questions.Where(question => questionIds.Contains(question.Id))
                 .Select(question => question.QuestionContent).ToList();
-            
-            return questionsContents == null ? throw new PdfNoQuestionsProvidedException() : questionsContents;
+
+            if (questionsContents.Count == 0)
+            {
+                throw new PdfNoQuestionsProvidedException();
+            }
+
+            return questionsContents;
         }
     }
 }
