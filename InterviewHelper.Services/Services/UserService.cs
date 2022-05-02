@@ -68,12 +68,12 @@ public class UserService : IUserService
     {
         if (!_userRepository.UserExists(userRequest.Email))
             throw new Exception("Given user does not exists");
-
+        
         var byteVersionPassword = Encoding.ASCII.GetBytes(userRequest.Password);
         var encryptedPassword = Encoding.ASCII.GetString(_sha.ComputeHash(byteVersionPassword));
-        
+
         var successfullLogIn = _userRepository.ValidUser(userRequest.Email, encryptedPassword);
-        
+
         if (!successfullLogIn)
             throw new AuthenticationFailedException();
 
@@ -99,9 +99,9 @@ public class UserService : IUserService
         };
 
         var token = new JwtSecurityToken(null, null,
-            claims,
-            expires: DateTime.Now.AddMinutes(20),
-            signingCredentials: credentials);
+                                        claims,
+                                        expires: DateTime.Now.AddMinutes(20),
+                                        signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
