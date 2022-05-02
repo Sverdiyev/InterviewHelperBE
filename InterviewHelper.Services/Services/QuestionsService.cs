@@ -95,14 +95,8 @@ public class QuestionsService : IQuestionsService
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            var questionsContents = context.Questions.Where(question => questionIds.Contains(question.Id))
-                .Select(question => question.QuestionContent).ToList();
-
-            if (questionsContents.Count == 0)
-            {
-                throw new NoQuestionsProvidedException();
-            }
-
+            var questionsContents = context.Questions.Where(_ => questionIds.Contains(_.Id))
+                .Select(_ => _.QuestionContent).ToList();
             return questionsContents;
         }
     }

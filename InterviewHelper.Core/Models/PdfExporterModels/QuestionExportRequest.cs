@@ -1,6 +1,6 @@
 ﻿namespace InterviewHelper.Core.Models.PdfExporterModels;
 
-public class PdfExporterModelRequest
+public class QuestionExportRequest
 {
     public DateTime InterviewDate { get; set; }
     public string IntervieweePosition { get; set; }
