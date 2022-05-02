@@ -100,7 +100,7 @@ public class QuestionsService : IQuestionsService
 
             if (questionsContents.Count == 0)
             {
-                throw new PdfNoQuestionsProvidedException();
+                throw new NoQuestionsProvidedException();
             }
 
             return questionsContents;

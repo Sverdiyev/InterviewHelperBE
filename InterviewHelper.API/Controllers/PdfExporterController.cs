@@ -30,7 +30,7 @@ public class PdfController : Controller
             using var pdfDoc = ironPdfRender.RenderHtmlAsPdf(html);
             return File(pdfDoc.Stream.ToArray(), "application/pdf");
         }
-        catch (PdfNoQuestionsProvidedException)
+        catch (NoQuestionsProvidedException)
         {
             return BadRequest(new {message = "No questions provided for the pdf"});
         }
