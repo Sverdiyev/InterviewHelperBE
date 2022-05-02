@@ -1,6 +1,6 @@
 ﻿namespace InterviewHelper.Core.Exceptions
 {
-    public class PdfNoQuestionsProvidedException : Exception
+    public class NoQuestionsProvidedException : Exception
     {
     } 
 }
