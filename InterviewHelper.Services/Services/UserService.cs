@@ -70,11 +70,10 @@ public class UserService : IUserService
             throw new Exception("Given user does not exists");
 
         var byteVersionPassword = Encoding.ASCII.GetBytes(userRequest.Password);
-
         var encryptedPassword = Encoding.ASCII.GetString(_sha.ComputeHash(byteVersionPassword));
-
+        
         var successfullLogIn = _userRepository.ValidUser(userRequest.Email, encryptedPassword);
-
+        
         if (!successfullLogIn)
             throw new AuthenticationFailedException();
 
