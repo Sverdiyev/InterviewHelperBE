@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace InterviewHelper.Api.Controllers
 {
     [ApiController]
-    
+    [Authorize]
     [Route("[controller]")]
     public class CommentsController : Controller
     {
@@ -22,7 +22,13 @@ namespace InterviewHelper.Api.Controllers
             _userRepository = userRepository;
             _commentService = commentService;
         }
-        [Authorize]
+
+        [HttpGet]
+        public IActionResult GetQuestionComments()
+        {
+            throw new NotImplementedException();
+        }
+
         [HttpPost("add")]
         public IActionResult AddComment(CommentRequest newComment)
         {
@@ -40,9 +46,18 @@ namespace InterviewHelper.Api.Controllers
         [HttpPut("edit")]
         public IActionResult EditComment(Comment comment)
         {
-            var sessionUser = _userRepository.GetUser(User.FindFirst(ClaimTypes.Email).Value);
-            if (sessionUser.Id != comment.UserId)
-                return BadRequest("User is not authorized to perform this action");
+            var sessionUserEmail = User.FindFirst(ClaimTypes.Email).Value;
+            try
+            {
+                var commentOwner = _commentService.GetCommentOwnerById(comment.Id);
+                if (sessionUserEmail != commentOwner.Email)
+                    return BadRequest("User is not authorized to perform this action");
+            }
+            catch (UserNotFoundException)
+            {
+                return BadRequest("Comment owner not found");
+            }
+
             try
             {
                 _commentService.EditComment(comment);
