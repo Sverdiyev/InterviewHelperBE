@@ -27,7 +27,7 @@ namespace InterviewHelper.Api.Controllers
             return Ok(_questionsService.GetQuestions(search));
         }
 
-        [HttpPost("add")]
+        [HttpPost]
         public IActionResult PostAddQuestion(RequestQuestion newQuestion)
         {
             try

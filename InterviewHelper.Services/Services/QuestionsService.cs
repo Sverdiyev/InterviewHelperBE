@@ -2,6 +2,7 @@ using InterviewHelper.Core.Exceptions;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.DataAccess.Data;
+using InterviewHelper.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -10,10 +11,12 @@ namespace InterviewHelper.Services.Services;
 public class QuestionsService : IQuestionsService
 {
     private readonly string _connectionString;
+    private readonly CommentRepository _commentRepository;
 
-    public QuestionsService(IOptions<DBConfiguration> config)
+    public QuestionsService(IOptions<DBConfiguration> config, CommentRepository commentRepository)
     {
         _connectionString = config.Value.ConnectionString;
+        _commentRepository = commentRepository;
     }
 
     public async Task AddQuestion(RequestQuestion newQuestion)
@@ -83,7 +86,11 @@ public class QuestionsService : IQuestionsService
         using var context = new InterviewHelperContext(_connectionString);
 
         var question = GetQuestionById(questionId);
-
+        
+        // delete all related comments
+        var questionComments = _commentRepository.GetAllQuestionComments(questionId);
+        context.Comments.RemoveRange(questionComments);
+        
         context.Remove(question);
         context.SaveChanges();
     }
