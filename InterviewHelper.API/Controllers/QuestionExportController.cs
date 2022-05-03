@@ -24,12 +24,11 @@ public class QuestionExportController : ControllerBase
     {
         try
         {
-            IronPdf.Installation.LinuxAndDockerDependenciesAutoConfig = true;
             var questionsContent = _questionsService.GetQuestionsByIds(modelRequest.Questions);
 
             if (questionsContent.Count == 0)
             {
-                throw new NoQuestionsProvidedException();
+                return BadRequest(new {message = "No questions provided for the pdf"});
             }
 
             var model = new PdfExporterModel()
@@ -43,10 +42,6 @@ public class QuestionExportController : ControllerBase
             var ironPdfRender = new IronPdf.ChromePdfRenderer();
             using var pdfDoc = ironPdfRender.RenderHtmlAsPdf(html);
             return File(pdfDoc.Stream.ToArray(), "application/pdf");
-        }
-        catch (NoQuestionsProvidedException)
-        {
-            return BadRequest(new {message = "No questions provided for the pdf"});
         }
         catch (Exception ex)
         {
@@ -65,7 +60,7 @@ public class QuestionExportController : ControllerBase
         {
             questionsBlock += string.Format(questionItem, "top", "font-size:12px;", question);
         }
-        
+
         htmlPdf = htmlPdf.Replace("{ZPXF88jaM2nFuBnhmXo0}", model.IntervieweePosition);
         htmlPdf = htmlPdf.Replace("{gHk4UMD5mMe9hvQ3VUn0}", model.InterviewDate.ToShortDateString());
         htmlPdf = htmlPdf.Replace("{wR4C4o25BUbyvg0yZNJh}", model.InterviewDate.ToShortTimeString());
