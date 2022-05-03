@@ -60,6 +60,6 @@ public class UserRepository
         using (var context = new InterviewHelperContext(_connectionString))
         {
             return context.Users.First(_ => _.Email == email);
-        } 
+        }
     }
 }

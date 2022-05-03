@@ -14,6 +14,15 @@ public class CommentRepository
         _connectionString = config.Value.ConnectionString;
     }
 
+    public List<Comment> GetAllQuestionComments(int questionId)
+    {
+        using (var context = new InterviewHelperContext(_connectionString))
+        {
+            var commentQuestions = context.Comments.Where(_ => _.QuestionId == questionId).ToList();
+            return commentQuestions;
+        }
+    }
+
     public Comment AddComment(Comment newComment)
     {
         using (var context = new InterviewHelperContext(_connectionString))

@@ -81,13 +81,22 @@ public class QuestionsService : IQuestionsService
     public void DeleteQuestion(int questionId)
     {
         using var context = new InterviewHelperContext(_connectionString);
-        var question = context.Questions.FirstOrDefault(q => q.Id == questionId);
+
+        var question = GetQuestionById(questionId);
+
+        context.Remove(question);
+        context.SaveChanges();
+    }
+
+    public Question GetQuestionById(int questionId)
+    {
+        using var context = new InterviewHelperContext(_connectionString);
+        var question = context.Questions.FirstOrDefault(_ => _.Id == questionId);
         if (question == null)
         {
             throw new QuestionNotFoundException();
         }
 
-        context.Remove(question);
-        context.SaveChanges();
+        return question;
     }
 }

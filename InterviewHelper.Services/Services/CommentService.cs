@@ -8,10 +8,24 @@ namespace InterviewHelper.Services.Services;
 public class CommentService : ICommentService
 {
     private readonly CommentRepository _commentRepository;
+    private readonly IQuestionsService _questionService;
 
-    public CommentService(CommentRepository commentRepository)
+    public CommentService(CommentRepository commentRepository, IQuestionsService questionService)
     {
         _commentRepository = commentRepository;
+        _questionService = questionService;
+    }
+
+    public List<Comment> GetAllQuestionComments(int questionId)
+    {
+        var question = _questionService.GetQuestionById(questionId); // throws QuestionNotFoundException ?
+        var questionComments = _commentRepository.GetAllQuestionComments(question.Id);
+        if (questionComments.Count == 0)
+        {
+            throw new QuestionHasNoCommentsException();
+        }
+
+        return questionComments;
     }
 
     public Comment AddComment(CommentRequest newComment)

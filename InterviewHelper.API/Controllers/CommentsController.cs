@@ -23,10 +23,25 @@ namespace InterviewHelper.Api.Controllers
             _commentService = commentService;
         }
 
-        [HttpGet]
-        public IActionResult GetQuestionComments()
+        [HttpGet("{questionId:int}")]
+        public IActionResult GetQuestionComments(int questionId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return Ok(_commentService.GetAllQuestionComments(questionId));
+            }
+            catch (QuestionNotFoundException)
+            {
+                return BadRequest("Question not found");
+            }
+            catch (QuestionHasNoCommentsException)
+            {
+                return BadRequest("Question has no comments");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
 
         [HttpPost("add")]
