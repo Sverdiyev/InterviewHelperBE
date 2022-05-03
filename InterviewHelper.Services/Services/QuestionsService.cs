@@ -99,4 +99,14 @@ public class QuestionsService : IQuestionsService
 
         return question;
     }
+
+    public List<string> GetQuestionsByIds(List<int> questionIds)
+    {
+        using (var context = new InterviewHelperContext(_connectionString))
+        {
+            var questionsContents = context.Questions.Where(_ => questionIds.Contains(_.Id))
+                .Select(_ => _.QuestionContent).ToList();
+            return questionsContents;
+        }
+    }
 }

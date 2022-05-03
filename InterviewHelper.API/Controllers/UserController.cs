@@ -33,7 +33,7 @@ namespace InterviewHelper.Api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -51,13 +51,13 @@ namespace InterviewHelper.Api.Controllers
                 _userService.EditUser(user);
                 return Ok();
             }
-            catch(UserNotFoundException)
+            catch (UserNotFoundException)
             {
                 return BadRequest("User not found");
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -70,12 +70,12 @@ namespace InterviewHelper.Api.Controllers
             }
             catch (AuthenticationFailedException)
             {
-                return BadRequest(new { message = "Username or password is incorrect" });
+                return BadRequest(new {message = "Username or password is incorrect"});
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
-         }
+        }
     }
 }
