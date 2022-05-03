@@ -8,4 +8,5 @@ public interface IQuestionsService
     List<Question> GetQuestions(string? searchParam);
     Task UpdateQuestion(RequestQuestion updatedQuestion);
     void DeleteQuestion(int questionId);
+    List<string> GetQuestionsByIds(List<int> questionIds);
 }
