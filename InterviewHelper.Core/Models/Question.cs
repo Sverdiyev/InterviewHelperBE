@@ -9,6 +9,6 @@ namespace InterviewHelper.Core.Models
         public string Note { get; set; } 
         public int Vote { get; set; }
         public bool EasyToGoogle { get; set; }
-        public virtual IList<Tag> Tags { get; set; } = new List<Tag>();
+        public IList<Tag> Tags { get; set; } = new List<Tag>();
     }
 }

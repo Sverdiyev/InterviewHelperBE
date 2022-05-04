@@ -106,6 +106,28 @@ namespace InterviewHelper.DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("InterviewHelper.Core.Models.Vote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserVote")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Votes");
+                });
+
             modelBuilder.Entity("InterviewHelper.Core.Models.Tag", b =>
                 {
                     b.HasOne("InterviewHelper.Core.Models.Question", null)

@@ -10,7 +10,7 @@ public class RequestQuestion
         medium,
         hard
     }
-    
+
     public int? Id { get; set; }
 
     [EnumDataType(typeof(ComplexityOptions))]
@@ -18,6 +18,7 @@ public class RequestQuestion
 
     [StringLength(100, MinimumLength = 10)]
     public string QuestionContent { get; set; }
+
     public string Note { get; set; }
     public List<string> Tags { get; set; }
     public bool EasyToGoogle { get; set; }
