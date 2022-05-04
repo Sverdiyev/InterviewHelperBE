@@ -3,7 +3,6 @@ using InterviewHelper.Core.Models;
 using InterviewHelper.Core.Models.RequestsModels;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.DataAccess.Data;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -20,14 +19,14 @@ public class QuestionsService : IQuestionsService
 
     public async Task AddQuestion(RequestQuestion newQuestion)
     {
-        var addedQuestion = new Question()
+        var addedQuestion = new Question
         {
             Complexity = newQuestion.Complexity,
             Note = newQuestion.Note,
-            Tags = newQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList(),
+            Tags = newQuestion.Tags.Select(tag => new Tag {TagName = tag}).ToList(),
             EasyToGoogle = newQuestion.EasyToGoogle,
             QuestionContent = newQuestion.QuestionContent,
-            CreationDate = DateTime.Now,
+            CreationDate = DateTime.Now
         };
 
         using (var context = new InterviewHelperContext(_connectionString))
@@ -42,9 +41,7 @@ public class QuestionsService : IQuestionsService
         using (var context = new InterviewHelperContext(_connectionString))
         {
             if (string.IsNullOrEmpty(rawSearchParam))
-            {
                 return GetQuestionsWithVotes(context.Questions.Include("Tags").ToList(), authenticatedUser);
-            }
 
             var searchParam = rawSearchParam.ToLower().Trim();
 
@@ -66,17 +63,14 @@ public class QuestionsService : IQuestionsService
         {
             var existingQuestion =
                 context.Questions.Include("Tags").FirstOrDefault(q => q.Id == updatedQuestion.Id);
-            if (existingQuestion == null)
-            {
-                throw new QuestionNotFoundException();
-            }
+            if (existingQuestion == null) throw new QuestionNotFoundException();
 
             existingQuestion.Complexity = updatedQuestion.Complexity;
             existingQuestion.Note = updatedQuestion.Note;
             existingQuestion.EasyToGoogle = updatedQuestion.EasyToGoogle;
             existingQuestion.QuestionContent = updatedQuestion.QuestionContent;
             existingQuestion.Tags.Clear();
-            existingQuestion.Tags = updatedQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList();
+            existingQuestion.Tags = updatedQuestion.Tags.Select(tag => new Tag {TagName = tag}).ToList();
 
             await context.SaveChangesAsync();
         }
@@ -93,8 +87,7 @@ public class QuestionsService : IQuestionsService
             {
                 var questionVote = userVotes.FirstOrDefault(_ => _.QuestionId == question.Id);
                 if (questionVote == null)
-                {
-                    questionsWithVotes.Add(new VotedQuestionModel()
+                    questionsWithVotes.Add(new VotedQuestionModel
                     {
                         Id = question.Id,
                         Complexity = question.Complexity,
@@ -106,10 +99,8 @@ public class QuestionsService : IQuestionsService
                         Tags = question.Tags,
                         Vote = question.Vote
                     });
-                }
                 else
-                {
-                    questionsWithVotes.Add(new VotedQuestionModel()
+                    questionsWithVotes.Add(new VotedQuestionModel
                     {
                         Id = question.Id,
                         Complexity = question.Complexity,
@@ -121,7 +112,6 @@ public class QuestionsService : IQuestionsService
                         Vote = question.Vote,
                         UserVote = questionVote.UserVote
                     });
-                }
             }
         }
 
@@ -132,10 +122,7 @@ public class QuestionsService : IQuestionsService
     {
         using var context = new InterviewHelperContext(_connectionString);
         var question = context.Questions.FirstOrDefault(q => q.Id == questionId);
-        if (question == null)
-        {
-            throw new QuestionNotFoundException();
-        }
+        if (question == null) throw new QuestionNotFoundException();
 
         var questionVotes = context.Votes.Where(_ => _.QuestionId == questionId).ToList();
         context.RemoveRange(questionVotes);
@@ -158,17 +145,21 @@ public class QuestionsService : IQuestionsService
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            var questionToUpVote = context.Questions.FirstOrDefault(_ => _.Id == vote.QuestionId);
-            if (questionToUpVote == null)
-            {
-                throw new QuestionNotFoundException();
-            }
+            var questionToVote = context.Questions.FirstOrDefault(_ => _.Id == vote.QuestionId);
+            if (questionToVote == null) throw new QuestionNotFoundException();
 
             var voteExists = context.Votes.FirstOrDefault(_ =>
-                _.QuestionId == questionToUpVote.Id && _.UserId == authenticatedUser.Id);
+                _.QuestionId == questionToVote.Id && _.UserId == authenticatedUser.Id);
             if (voteExists != null)
             {
+                if (voteExists.UserVote == userVote) return;
+
+                var voteValue = userVote == "up"
+                    ? questionToVote.Vote += 2
+                    : questionToVote.Vote -= 2;
+
                 voteExists.UserVote = userVote;
+
                 context.SaveChanges();
             }
             else
@@ -179,6 +170,11 @@ public class QuestionsService : IQuestionsService
                     UserId = vote.UserId,
                     UserVote = userVote
                 };
+
+                var voteValue = userVote == "up"
+                    ? questionToVote.Vote += 1
+                    : questionToVote.Vote -= 1;
+
                 context.Votes.Add(newUserVote);
                 context.SaveChanges();
             }
@@ -189,18 +185,16 @@ public class QuestionsService : IQuestionsService
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            var questionToUpVote = context.Questions.FirstOrDefault(_ => _.Id == vote.QuestionId);
-            if (questionToUpVote == null)
-            {
-                throw new QuestionNotFoundException();
-            }
+            var questionToDeleteVote = context.Questions.FirstOrDefault(_ => _.Id == vote.QuestionId);
+            if (questionToDeleteVote == null) throw new QuestionNotFoundException();
 
             var voteExists = context.Votes.FirstOrDefault(_ =>
-                _.QuestionId == questionToUpVote.Id && _.UserId == authenticatedUser.Id);
-            if (voteExists == null)
-            {
-                throw new VoteNotFoundException();
-            }
+                _.QuestionId == questionToDeleteVote.Id && _.UserId == authenticatedUser.Id);
+            if (voteExists == null) throw new VoteNotFoundException();
+
+            var voteValue = voteExists.UserVote == "up"
+                ? questionToDeleteVote.Vote -= 1
+                : questionToDeleteVote.Vote += 1;
 
             context.Votes.Remove(voteExists);
             context.SaveChanges();
