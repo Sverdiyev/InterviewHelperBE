@@ -63,7 +63,10 @@ public class QuestionsService : IQuestionsService
         {
             var existingQuestion =
                 context.Questions.Include("Tags").FirstOrDefault(q => q.Id == updatedQuestion.Id);
-            if (existingQuestion == null) throw new QuestionNotFoundException();
+            if (existingQuestion == null)
+            {
+                throw new QuestionNotFoundException();
+            }
 
             existingQuestion.Complexity = updatedQuestion.Complexity;
             existingQuestion.Note = updatedQuestion.Note;
@@ -87,6 +90,7 @@ public class QuestionsService : IQuestionsService
             {
                 var questionVote = userVotes.FirstOrDefault(_ => _.QuestionId == question.Id);
                 if (questionVote == null)
+                {
                     questionsWithVotes.Add(new VotedQuestionModel
                     {
                         Id = question.Id,
@@ -99,7 +103,9 @@ public class QuestionsService : IQuestionsService
                         Tags = question.Tags,
                         Vote = question.Vote
                     });
+                }
                 else
+                {
                     questionsWithVotes.Add(new VotedQuestionModel
                     {
                         Id = question.Id,
@@ -112,6 +118,7 @@ public class QuestionsService : IQuestionsService
                         Vote = question.Vote,
                         UserVote = questionVote.UserVote
                     });
+                }
             }
         }
 
@@ -122,7 +129,10 @@ public class QuestionsService : IQuestionsService
     {
         using var context = new InterviewHelperContext(_connectionString);
         var question = context.Questions.FirstOrDefault(q => q.Id == questionId);
-        if (question == null) throw new QuestionNotFoundException();
+        if (question == null)
+        {
+            throw new QuestionNotFoundException();
+        }
 
         var questionVotes = context.Votes.Where(_ => _.QuestionId == questionId).ToList();
         context.RemoveRange(questionVotes);
@@ -152,7 +162,10 @@ public class QuestionsService : IQuestionsService
                 _.QuestionId == questionToVote.Id && _.UserId == authenticatedUser.Id);
             if (voteExists != null)
             {
-                if (voteExists.UserVote == userVote) return;
+                if (voteExists.UserVote == userVote)
+                {
+                    return;
+                }
 
                 var voteValue = userVote == "up"
                     ? questionToVote.Vote += 2

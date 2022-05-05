@@ -95,7 +95,7 @@ public class UserService : IUserService
 
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email)
         };
 
         var token = new JwtSecurityToken(null, null,
