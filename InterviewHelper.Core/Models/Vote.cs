@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace InterviewHelper.Core.Models;
+﻿namespace InterviewHelper.Core.Models;
 
 public class Vote
 {

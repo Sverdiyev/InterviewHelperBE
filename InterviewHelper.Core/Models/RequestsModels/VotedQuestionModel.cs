@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace InterviewHelper.Core.Models.RequestsModels;
+﻿namespace InterviewHelper.Core.Models.RequestsModels;
 
 public class VotedQuestionModel
 {
