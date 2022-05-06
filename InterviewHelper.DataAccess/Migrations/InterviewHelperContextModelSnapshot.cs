@@ -34,6 +34,9 @@ namespace InterviewHelper.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("QuestionId")
                         .HasColumnType("int");
 

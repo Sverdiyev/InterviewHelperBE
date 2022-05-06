@@ -86,11 +86,11 @@ public class QuestionsService : IQuestionsService
         using var context = new InterviewHelperContext(_connectionString);
 
         var question = GetQuestionById(questionId);
-        
+
         // delete all related comments
         var questionComments = _commentRepository.GetAllQuestionComments(questionId);
         context.Comments.RemoveRange(questionComments);
-        
+
         context.Remove(question);
         context.SaveChanges();
     }
@@ -115,5 +115,13 @@ public class QuestionsService : IQuestionsService
                 .Select(_ => _.QuestionContent).ToList();
             return questionsContents;
         }
+    }
+
+    public bool CheckIfQuestionExists(int questionId)
+    {
+        using var context = new InterviewHelperContext(_connectionString);
+        var question = context.Questions.FirstOrDefault(_ => _.Id == questionId);
+
+        return question == null;
     }
 }

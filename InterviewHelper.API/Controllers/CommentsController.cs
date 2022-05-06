@@ -12,14 +12,12 @@ namespace InterviewHelper.Api.Controllers
     [ApiController]
     [Authorize]
     [Route("[controller]")]
-    public class CommentsController : Controller
+    public class CommentsController : ControllerBase
     {
-        private readonly UserRepository _userRepository;
         private readonly ICommentService _commentService;
 
-        public CommentsController(UserRepository userRepository, ICommentService commentService)
+        public CommentsController(ICommentService commentService)
         {
-            _userRepository = userRepository;
             _commentService = commentService;
         }
 

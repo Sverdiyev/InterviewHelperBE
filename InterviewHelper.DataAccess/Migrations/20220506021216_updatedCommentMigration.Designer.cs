@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InterviewHelper.DataAccess.Migrations
 {
     [DbContext(typeof(InterviewHelperContext))]
-    [Migration("20220502024101_addCommentMigration")]
-    partial class addCommentMigration
+    [Migration("20220506021216_updatedCommentMigration")]
+    partial class updatedCommentMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,6 +35,9 @@ namespace InterviewHelper.DataAccess.Migrations
                     b.Property<string>("CommentContent")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("QuestionId")
                         .HasColumnType("int");

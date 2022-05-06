@@ -18,13 +18,11 @@ public class CommentService : ICommentService
 
     public List<Comment> GetAllQuestionComments(int questionId)
     {
-        var question = _questionService.GetQuestionById(questionId); // throws QuestionNotFoundException ?
-        var questionComments = _commentRepository.GetAllQuestionComments(question.Id);
-        if (questionComments.Count == 0)
+        if (!_questionService.CheckIfQuestionExists(questionId))
         {
-            throw new QuestionHasNoCommentsException();
+            throw new QuestionNotFoundException();
         }
-
+        var questionComments = _commentRepository.GetAllQuestionComments(questionId);
         return questionComments;
     }
 
@@ -34,7 +32,8 @@ public class CommentService : ICommentService
         {
             CommentContent = newComment.CommentContent,
             UserId = newComment.UserId,
-            QuestionId = newComment.QuestionId
+            QuestionId = newComment.QuestionId,
+            CreationDate = newComment.CreationDate
         };
         return _commentRepository.AddComment(commentToAdd);
     }
