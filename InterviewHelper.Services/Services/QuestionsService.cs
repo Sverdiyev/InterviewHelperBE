@@ -41,7 +41,9 @@ public class QuestionsService : IQuestionsService
         using (var context = new InterviewHelperContext(_connectionString))
         {
             if (string.IsNullOrEmpty(rawSearchParam))
+            {
                 return GetQuestionsWithVotes(context.Questions.Include("Tags").ToList(), authenticatedUser);
+            }
 
             var searchParam = rawSearchParam.ToLower().Trim();
 
@@ -199,11 +201,17 @@ public class QuestionsService : IQuestionsService
         using (var context = new InterviewHelperContext(_connectionString))
         {
             var questionToDeleteVote = context.Questions.FirstOrDefault(_ => _.Id == vote.QuestionId);
-            if (questionToDeleteVote == null) throw new QuestionNotFoundException();
+            if (questionToDeleteVote == null)
+            {
+                throw new QuestionNotFoundException();
+            }
 
             var voteExists = context.Votes.FirstOrDefault(_ =>
                 _.QuestionId == questionToDeleteVote.Id && _.UserId == authenticatedUser.Id);
-            if (voteExists == null) throw new VoteNotFoundException();
+            if (voteExists == null)
+            {
+                throw new VoteNotFoundException();
+            }
 
             var voteValue = voteExists.UserVote == "up"
                 ? questionToDeleteVote.Vote -= 1
