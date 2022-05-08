@@ -122,6 +122,6 @@ public class QuestionsService : IQuestionsService
         using var context = new InterviewHelperContext(_connectionString);
         var question = context.Questions.FirstOrDefault(_ => _.Id == questionId);
 
-        return question == null;
+        return question != null;
     }
 }

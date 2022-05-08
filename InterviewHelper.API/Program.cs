@@ -67,6 +67,8 @@ builder.Services.AddSwaggerGen(option =>
 });
 builder.Services.AddScoped<IQuestionsService, QuestionsService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.Configure<DBConfiguration>(builder.Configuration.GetSection("Database"));
 

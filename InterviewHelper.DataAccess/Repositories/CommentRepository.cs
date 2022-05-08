@@ -38,7 +38,7 @@ public class CommentRepository
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            var commentToEdit = context.Comments.First(_ => _.Id == comment.Id);
+            var commentToEdit = context.Comments.FirstOrDefault(_ => _.Id == comment.Id);
             if (commentToEdit == null)
             {
                 throw new CommentNotFoundException();
@@ -68,7 +68,7 @@ public class CommentRepository
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            var commentToEdit = context.Comments.First(_ => _.Id == commentId);
+            var commentToEdit = context.Comments.FirstOrDefault(_ => _.Id == commentId);
             if (commentToEdit == null)
             {
                 throw new CommentNotFoundException();

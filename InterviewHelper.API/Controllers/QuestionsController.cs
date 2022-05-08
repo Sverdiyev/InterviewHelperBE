@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace InterviewHelper.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class QuestionsController : ControllerBase
     {
