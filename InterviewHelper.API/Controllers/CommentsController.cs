@@ -32,10 +32,6 @@ namespace InterviewHelper.Api.Controllers
             {
                 return BadRequest("Question not found");
             }
-            catch (QuestionHasNoCommentsException)
-            {
-                return BadRequest("Question has no comments");
-            }
             catch (Exception ex)
             {
                 return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
@@ -59,22 +55,20 @@ namespace InterviewHelper.Api.Controllers
         [HttpPut("edit")]
         public IActionResult EditComment(Comment comment)
         {
-            var sessionUserEmail = User.FindFirst(ClaimTypes.Email).Value;
             try
             {
-                var commentOwner = _commentService.GetCommentOwnerById(comment.Id);
-                if (sessionUserEmail != commentOwner.Email)
-                    return BadRequest("User is not authorized to perform this action");
+                var sessionUserEmail = User.FindFirst(ClaimTypes.Email).Value;
+                _commentService.CommentBelongsToUser(sessionUserEmail, comment.Id);
+                _commentService.EditComment(comment);
+                return Ok();
+            }
+            catch(UnauthorizedOperationException)
+            {
+                return BadRequest("User is not allowed to modify the comment");
             }
             catch (UserNotFoundException)
             {
                 return BadRequest("Comment owner not found");
-            }
-
-            try
-            {
-                _commentService.EditComment(comment);
-                return Ok();
             }
             catch (CommentNotFoundException)
             {
@@ -89,14 +83,16 @@ namespace InterviewHelper.Api.Controllers
         [HttpDelete("{commentId:int}")]
         public IActionResult DeleteComment(int commentId)
         {
-            var sessionUserEmail = User.FindFirst(ClaimTypes.Email).Value;
             try
             {
-                var commentOwner = _commentService.GetCommentOwnerById(commentId);
-                if (sessionUserEmail != commentOwner.Email)
-                    return BadRequest("User is not authorized to perform this action");
+                var sessionUserEmail = User.FindFirst(ClaimTypes.Email).Value;
+                _commentService.CommentBelongsToUser(sessionUserEmail, commentId);
                 _commentService.DeleteComment(commentId);
                 return Ok();
+            }
+            catch(UnauthorizedOperationException)
+            {
+                return BadRequest("User is not allowed to delete the comment");
             }
             catch (UserNotFoundException)
             {

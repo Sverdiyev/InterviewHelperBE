@@ -22,6 +22,7 @@ public class CommentService : ICommentService
         {
             throw new QuestionNotFoundException();
         }
+
         var questionComments = _commentRepository.GetAllQuestionComments(questionId);
         return questionComments;
     }
@@ -57,5 +58,20 @@ public class CommentService : ICommentService
         }
 
         return commentOwner;
+    }
+
+    public void CommentBelongsToUser(string email, int commentId)
+    {
+        var commentOwner = _commentRepository.GetCommentOwnerById(commentId);
+
+        if (commentOwner == null)
+        {
+            throw new UserNotFoundException();
+        }
+
+        if (commentOwner.Email != email)
+        {
+            throw new UnauthorizedOperationException();
+        }
     }
 }

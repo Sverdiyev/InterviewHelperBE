@@ -68,7 +68,13 @@ public class CommentRepository
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            var commentOwnerId = context.Comments.Where(_ => _.Id == commentId).Select(_ => _.UserId).First();
+            var commentToEdit = context.Comments.First(_ => _.Id == commentId);
+            if (commentToEdit == null)
+            {
+                throw new CommentNotFoundException();
+            }
+            var commentOwnerId = context.Comments.Where(_ => _.Id == commentId).Select(_ => _.UserId).FirstOrDefault();
+            
             return context.Users.FirstOrDefault(_ => commentOwnerId == _.Id);
         }
     }
