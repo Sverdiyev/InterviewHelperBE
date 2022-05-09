@@ -62,13 +62,9 @@ namespace InterviewHelper.Api.Controllers
                 _commentService.EditComment(comment);
                 return Ok();
             }
-            catch(UnauthorizedOperationException)
+            catch (UnauthorizedOperationException)
             {
                 return BadRequest("User is not allowed to modify the comment");
-            }
-            catch (UserNotFoundException)
-            {
-                return BadRequest("Comment owner not found");
             }
             catch (CommentNotFoundException)
             {
@@ -90,13 +86,9 @@ namespace InterviewHelper.Api.Controllers
                 _commentService.DeleteComment(commentId);
                 return Ok();
             }
-            catch(UnauthorizedOperationException)
+            catch (UnauthorizedOperationException)
             {
                 return BadRequest("User is not allowed to delete the comment");
-            }
-            catch (UserNotFoundException)
-            {
-                return BadRequest("Comment owner not found");
             }
             catch (CommentNotFoundException)
             {

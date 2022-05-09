@@ -60,16 +60,15 @@ public class CommentService : ICommentService
         return commentOwner;
     }
 
-    public void CommentBelongsToUser(string email, int commentId)
+    public bool CommentBelongsToUser(string email, int commentId)
     {
-        var commentOwner = _commentRepository.GetCommentOwnerById(commentId);
-
-        if (commentOwner == null)
+        try
         {
-            throw new UserNotFoundException();
-        }
+            var commentOwner = _commentRepository.GetCommentOwnerById(commentId);
 
-        if (commentOwner.Email != email)
+            return commentOwner.Email == email;
+        }
+        catch (UserNotFoundException)
         {
             throw new UnauthorizedOperationException();
         }

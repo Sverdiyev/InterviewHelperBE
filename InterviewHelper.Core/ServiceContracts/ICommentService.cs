@@ -9,5 +9,5 @@ public interface ICommentService
     void EditComment(Comment comment);
     void DeleteComment(int commentId);
     User GetCommentOwnerById(int commentId);
-    void CommentBelongsToUser(string email, int commentId);
+    bool CommentBelongsToUser(string email, int commentId);
 }
