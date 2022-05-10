@@ -45,6 +45,8 @@ namespace InterviewHelper.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("QuestionId");
+
                     b.ToTable("Comments");
                 });
 
@@ -132,6 +134,15 @@ namespace InterviewHelper.DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("InterviewHelper.Core.Models.Comment", b =>
+                {
+                    b.HasOne("InterviewHelper.Core.Models.Question", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("InterviewHelper.Core.Models.Tag", b =>
                 {
                     b.HasOne("InterviewHelper.Core.Models.Question", null)
@@ -143,6 +154,8 @@ namespace InterviewHelper.DataAccess.Migrations
 
             modelBuilder.Entity("InterviewHelper.Core.Models.Question", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
