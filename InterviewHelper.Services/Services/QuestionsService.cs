@@ -23,7 +23,7 @@ public class QuestionsService : IQuestionsService
             Complexity = newQuestion.Complexity,
             Note = newQuestion.Note,
             Tags = newQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList(),
-            EasyToGoogle = newQuestion.EasyToGoogle,
+            HardToGoogle = newQuestion.HardToGoogle,
             QuestionContent = newQuestion.QuestionContent,
             CreationDate = DateTime.Now,
         };
@@ -35,24 +35,29 @@ public class QuestionsService : IQuestionsService
         }
     }
 
-    public List<Question> GetQuestions(string? rawSearchParam)
+    public List<Question> GetQuestionsWithSearch(RequestQuestionSearch searchParams)
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            if (string.IsNullOrEmpty(rawSearchParam))
+            if (searchParams.IsEmpty)
             {
                 return context.Questions.Include("Tags").ToList();
             }
 
-            var searchParam = rawSearchParam.ToLower().Trim();
-
+            //TODO:  to add filter by Favorite once it is added
             return context.Questions
-                .Where(q => q.Note.ToLower().Contains(searchParam) ||
-                            q.QuestionContent.ToLower().Contains(searchParam) ||
-                            q.Complexity.ToLower().Contains(searchParam) ||
-                            q.Tags.Any(t => t.TagName.ToLower().Contains(searchParam)))
-                .Include("Tags")
-                .ToList();
+                .Where(q => searchParams.Complexity == null || searchParams.Complexity.Contains(q.Complexity))
+                .Where(q => searchParams.Tags == null ||
+                            q.Tags.Any(tag => searchParams.Tags.Contains(tag.TagName)))
+                .Where(q => searchParams.HardToGoogle == null || q.HardToGoogle == searchParams.HardToGoogle)
+                .Where(q => searchParams.Vote == null ||
+                            q.Vote > searchParams.Vote.Min() && q.Vote < searchParams.Vote.Max())
+                .Where(q => searchParams.Search == null ||
+                            q.Note.ToLower().Contains(searchParams.Search) ||
+                            q.QuestionContent.ToLower().Contains(searchParams.Search) ||
+                            q.Complexity.ToLower().Contains(searchParams.Search) ||
+                            q.Tags.Any(t => t.TagName.ToLower().Contains(searchParams.Search)))
+                .Include("Tags").ToList();
         }
     }
 
@@ -69,7 +74,7 @@ public class QuestionsService : IQuestionsService
 
             existingQuestion.Complexity = updatedQuestion.Complexity;
             existingQuestion.Note = updatedQuestion.Note;
-            existingQuestion.EasyToGoogle = updatedQuestion.EasyToGoogle;
+            existingQuestion.HardToGoogle = updatedQuestion.HardToGoogle;
             existingQuestion.QuestionContent = updatedQuestion.QuestionContent;
             existingQuestion.Tags.Clear();
             existingQuestion.Tags = updatedQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList();

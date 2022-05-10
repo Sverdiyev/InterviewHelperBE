@@ -21,10 +21,10 @@ namespace InterviewHelper.Api.Controllers
             _questionsService = questionsService;
         }
 
-        [HttpGet]
-        public IActionResult GetQuestions(string? search)
+        [HttpPost("/fetch-questions")]
+        public IActionResult PostQuestionSearch(RequestQuestionSearch searchParams)
         {
-            return Ok(_questionsService.GetQuestions(search));
+            return Ok(_questionsService.GetQuestionsWithSearch(searchParams));
         }
 
         [HttpPost]
