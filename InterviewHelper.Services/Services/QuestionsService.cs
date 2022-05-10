@@ -86,9 +86,7 @@ public class QuestionsService : IQuestionsService
         using var context = new InterviewHelperContext(_connectionString);
 
         var question = GetQuestionById(questionId);
-
-        // TODO: should add cascade deletion for comments in the migration.
-
+        
         context.Remove(question);
         context.SaveChanges();
     }
