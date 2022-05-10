@@ -70,7 +70,7 @@ public class CommentService : ICommentService
         }
         catch (UserNotFoundException)
         {
-            throw new UnauthorizedOperationException();
+            return false;
         }
     }
 }

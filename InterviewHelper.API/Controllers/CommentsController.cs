@@ -58,13 +58,12 @@ namespace InterviewHelper.Api.Controllers
             try
             {
                 var sessionUserEmail = User.FindFirst(ClaimTypes.Email).Value;
-                _commentService.CommentBelongsToUser(sessionUserEmail, comment.Id);
+                if (!_commentService.CommentBelongsToUser(sessionUserEmail, comment.Id))
+                {
+                    return BadRequest("User is not allowed to modify the comment");
+                }
                 _commentService.EditComment(comment);
                 return Ok();
-            }
-            catch (UnauthorizedOperationException)
-            {
-                return BadRequest("User is not allowed to modify the comment");
             }
             catch (CommentNotFoundException)
             {
@@ -82,13 +81,12 @@ namespace InterviewHelper.Api.Controllers
             try
             {
                 var sessionUserEmail = User.FindFirst(ClaimTypes.Email).Value;
-                _commentService.CommentBelongsToUser(sessionUserEmail, commentId);
+                if (!_commentService.CommentBelongsToUser(sessionUserEmail, commentId))
+                {
+                    return BadRequest("User is not allowed to delete the comment");
+                }
                 _commentService.DeleteComment(commentId);
                 return Ok();
-            }
-            catch (UnauthorizedOperationException)
-            {
-                return BadRequest("User is not allowed to delete the comment");
             }
             catch (CommentNotFoundException)
             {
