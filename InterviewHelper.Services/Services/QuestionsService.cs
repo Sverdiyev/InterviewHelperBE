@@ -87,9 +87,7 @@ public class QuestionsService : IQuestionsService
 
         var question = GetQuestionById(questionId);
 
-        // delete all related comments
-        var questionComments = _commentRepository.GetAllQuestionComments(questionId);
-        context.Comments.RemoveRange(questionComments);
+        // TODO: should add cascade deletion for comments in the migration.
 
         context.Remove(question);
         context.SaveChanges();
