@@ -153,7 +153,7 @@ public class QuestionsService : IQuestionsService
         }
     }
 
-    public void VoteQuestion(string userVote, VoteRequest vote, User authenticatedUser)
+    private void VoteQuestion(string userVote, VoteRequest vote, User authenticatedUser)
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
@@ -220,5 +220,15 @@ public class QuestionsService : IQuestionsService
             context.Votes.Remove(voteExists);
             context.SaveChanges();
         }
+    }
+
+    public void UpVoteQuestion(VoteRequest vote, User authenticatedUser)
+    {
+        VoteQuestion("up", vote, authenticatedUser);
+    }
+
+    public void DownVoteQuestion(VoteRequest vote, User authenticatedUser)
+    {
+        VoteQuestion("down", vote, authenticatedUser);
     }
 }

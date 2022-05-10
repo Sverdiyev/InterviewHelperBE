@@ -19,8 +19,7 @@ namespace InterviewHelper.Api.Controllers
         private readonly IQuestionsService _questionsService;
         private readonly IUserService _userService;
 
-        public QuestionsController(ILogger<QuestionsController> logger,
-            IQuestionsService questionsService, IUserService userService)
+        public QuestionsController(ILogger<QuestionsController> logger, IQuestionsService questionsService, IUserService userService)
         {
             _logger = logger;
             _questionsService = questionsService;
@@ -100,7 +99,7 @@ namespace InterviewHelper.Api.Controllers
 
             try
             {
-                _questionsService.VoteQuestion("up", vote, user);
+                _questionsService.UpVoteQuestion(vote, user);
                 return Ok();
             }
             catch (QuestionNotFoundException)
@@ -125,7 +124,7 @@ namespace InterviewHelper.Api.Controllers
 
             try
             {
-                _questionsService.VoteQuestion("down", vote, user);
+                _questionsService.DownVoteQuestion(vote, user);
                 return Ok();
             }
             catch (QuestionNotFoundException)
