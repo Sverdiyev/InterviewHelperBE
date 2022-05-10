@@ -8,4 +8,5 @@ public interface IUserService
     AuthenticateUserResponse AddUser(UserRequest newUser);
     void EditUser(UserUpdateRequest user);
     public AuthenticateUserResponse AuthenticateUser(AuthenticateUserRequest user);
+    User GetUserByEmail(string email);
 }

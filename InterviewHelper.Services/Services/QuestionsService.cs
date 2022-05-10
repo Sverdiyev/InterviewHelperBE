@@ -36,13 +36,13 @@ public class QuestionsService : IQuestionsService
         }
     }
 
-    public List<VotedQuestionModel> GetQuestions(string? rawSearchParam, User authenticatedUser)
+    public List<VotedQuestionModel> GetQuestions(string? rawSearchParam, int authenticatedUserId)
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
             if (string.IsNullOrEmpty(rawSearchParam))
             {
-                return GetQuestionsWithVotes(context.Questions.Include("Tags").ToList(), authenticatedUser);
+                return GetQuestionsWithVotes(context.Questions.Include("Tags").ToList(), authenticatedUserId);
             }
 
             var searchParam = rawSearchParam.ToLower().Trim();
@@ -55,7 +55,7 @@ public class QuestionsService : IQuestionsService
                 .Include("Tags")
                 .ToList();
 
-            return GetQuestionsWithVotes(allQuestions, authenticatedUser);
+            return GetQuestionsWithVotes(allQuestions, authenticatedUserId);
         }
     }
 
@@ -82,12 +82,12 @@ public class QuestionsService : IQuestionsService
     }
 
     private List<VotedQuestionModel> GetQuestionsWithVotes(List<Question> questions,
-        User authenticatedUser)
+        int authenticatedUserId)
     {
         var questionsWithVotes = new List<VotedQuestionModel>();
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            var userVotes = context.Votes.Where(_ => _.UserId == authenticatedUser.Id).ToList();
+            var userVotes = context.Votes.Where(_ => _.UserId == authenticatedUserId).ToList();
             foreach (var question in questions)
             {
                 var questionVote = userVotes.FirstOrDefault(_ => _.QuestionId == question.Id);

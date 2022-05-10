@@ -17,23 +17,23 @@ namespace InterviewHelper.Api.Controllers
     {
         private readonly ILogger<QuestionsController> _logger;
         private readonly IQuestionsService _questionsService;
-        private readonly UserRepository _userRepository;
+        private readonly IUserService _userService;
 
         public QuestionsController(ILogger<QuestionsController> logger,
-            IQuestionsService questionsService, UserRepository userRepository)
+            IQuestionsService questionsService, IUserService userService)
         {
             _logger = logger;
             _questionsService = questionsService;
-            _userRepository = userRepository;
+            _userService = userService;
         }
 
         [HttpGet]
         public IActionResult GetQuestions(string? search)
         {
             var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
-            var user = _userRepository.GetUser(userSessionEmail);
+            var user = _userService.GetUserByEmail(userSessionEmail);
 
-            var questions = _questionsService.GetQuestions(search, user);
+            var questions = _questionsService.GetQuestions(search, user.Id);
 
             return Ok(questions);
         }
@@ -92,7 +92,7 @@ namespace InterviewHelper.Api.Controllers
         public IActionResult UpvoteQuestion(VoteRequest vote)
         {
             var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
-            var user = _userRepository.GetUser(userSessionEmail);
+            var user = _userService.GetUserByEmail(userSessionEmail);
             if (user.Id != vote.UserId)
             {
                 return BadRequest("User is not authorized to perform this action");
@@ -117,7 +117,7 @@ namespace InterviewHelper.Api.Controllers
         public IActionResult DownvoteQuestion(VoteRequest vote)
         {
             var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
-            var user = _userRepository.GetUser(userSessionEmail);
+            var user = _userService.GetUserByEmail(userSessionEmail);
             if (user.Id != vote.UserId)
             {
                 return BadRequest("User is not authorized to perform this action");
@@ -142,7 +142,7 @@ namespace InterviewHelper.Api.Controllers
         public IActionResult DeleteQuestionVote(VoteRequest vote)
         {
             var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
-            var user = _userRepository.GetUser(userSessionEmail);
+            var user = _userService.GetUserByEmail(userSessionEmail);
 
             if (user.Id != vote.UserId)
             {
