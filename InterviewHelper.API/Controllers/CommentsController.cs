@@ -67,7 +67,7 @@ namespace InterviewHelper.Api.Controllers
             }
             catch (CommentNotFoundException)
             {
-                return BadRequest(new {message = "Comment not found"});
+                return BadRequest("Comment not found");
             }
             catch (Exception ex)
             {
