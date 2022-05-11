@@ -8,7 +8,7 @@ namespace InterviewHelper.Core.Models
         public string QuestionContent { get; set; }
         public string Note { get; set; } 
         public int Vote { get; set; }
-        public bool EasyToGoogle { get; set; }
+        public bool HardToGoogle { get; set; }
         public virtual IList<Tag> Tags { get; set; }
         public virtual IList<Comment> Comments { get; set; } 
         public virtual IList<Vote> Votes { get; set; }

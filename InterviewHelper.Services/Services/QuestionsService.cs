@@ -1,7 +1,5 @@
 using InterviewHelper.Core.Exceptions;
 using InterviewHelper.Core.Models;
-using InterviewHelper.Core.Models.RequestsModels;
-using InterviewHelper.Core.Models.RequestsModels;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.DataAccess.Data;
 using InterviewHelper.DataAccess.Repositories;
@@ -25,8 +23,8 @@ public class QuestionsService : IQuestionsService
         {
             Complexity = newQuestion.Complexity,
             Note = newQuestion.Note,
-            Tags = newQuestion.Tags.Select(tag => new Tag {TagName = tag}).ToList(),
-            EasyToGoogle = newQuestion.EasyToGoogle,
+            Tags = newQuestion.Tags.Select(tag => new Tag() {TagName = tag}).ToList(),
+            HardToGoogle = newQuestion.HardToGoogle,
             QuestionContent = newQuestion.QuestionContent,
             CreationDate = DateTime.Now
         };
@@ -74,7 +72,7 @@ public class QuestionsService : IQuestionsService
 
             existingQuestion.Complexity = updatedQuestion.Complexity;
             existingQuestion.Note = updatedQuestion.Note;
-            existingQuestion.EasyToGoogle = updatedQuestion.EasyToGoogle;
+            existingQuestion.HardToGoogle = updatedQuestion.HardToGoogle;
             existingQuestion.QuestionContent = updatedQuestion.QuestionContent;
             existingQuestion.Tags.Clear();
             existingQuestion.Tags = updatedQuestion.Tags.Select(tag => new Tag {TagName = tag}).ToList();
