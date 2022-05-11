@@ -110,4 +110,9 @@ public class UserService : IUserService
     {
         return _userRepository.GetUser(email);
     }
+    
+    public bool UserExists(int userId)
+    {
+        return _userRepository.UserExists(userId);
+    }
 }

@@ -9,4 +9,5 @@ public interface IUserService
     void EditUser(UserUpdateRequest user);
     AuthenticateUserResponse AuthenticateUser(AuthenticateUserRequest user);
     User GetUserByEmail(string email);
+    bool UserExists(int userId);
 }

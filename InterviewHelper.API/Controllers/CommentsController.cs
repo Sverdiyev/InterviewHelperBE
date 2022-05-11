@@ -15,10 +15,12 @@ namespace InterviewHelper.Api.Controllers
     public class CommentsController : ControllerBase
     {
         private readonly ICommentService _commentService;
+        private readonly IUserService _userService;
 
-        public CommentsController(ICommentService commentService)
+        public CommentsController(ICommentService commentService, IUserService userService)
         {
             _commentService = commentService;
+            _userService = userService;
         }
 
         [HttpGet("{questionId:int}")]
@@ -43,8 +45,17 @@ namespace InterviewHelper.Api.Controllers
         {
             try
             {
+                var sessionUserEmail = User.FindFirst(ClaimTypes.Email).Value;
+                if (_userService.GetUserByEmail(sessionUserEmail).Id != newComment.UserId)
+                {
+                    return BadRequest("User is not authorized to perform this action");
+                }
                 var response = _commentService.AddComment(newComment);
                 return Ok(response);
+            }
+            catch (UserNotFoundException)
+            {
+                return BadRequest("User not found");
             }
             catch (Exception ex)
             {
