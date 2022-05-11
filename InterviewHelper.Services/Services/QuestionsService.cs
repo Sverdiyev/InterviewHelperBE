@@ -38,26 +38,26 @@ public class QuestionsService : IQuestionsService
         }
     }
 
-    public List<VotedQuestionModel> GetQuestions(string? rawSearchParam, int authenticatedUserId)
+    public IEnumerable<VotedQuestionModel> GetQuestions(string? rawSearchParam, int authenticatedUserId)
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
             if (string.IsNullOrEmpty(rawSearchParam))
             {
-                return GetQuestionsWithVotes(context.Questions.Include("Tags").ToList(), authenticatedUserId);
+                return GetQuestionsWithTagsAndUserVote(authenticatedUserId);
             }
+
+            var allQuestions = GetQuestionsWithTagsAndUserVote(authenticatedUserId);
 
             var searchParam = rawSearchParam.ToLower().Trim();
 
-            var allQuestions = context.Questions
+            var filteredQuestions = allQuestions
                 .Where(q => q.Note.ToLower().Contains(searchParam) ||
                             q.QuestionContent.ToLower().Contains(searchParam) ||
                             q.Complexity.ToLower().Contains(searchParam) ||
-                            q.Tags.Any(t => t.TagName.ToLower().Contains(searchParam)))
-                .Include("Tags")
-                .ToList();
+                            q.Tags.Any(t => t.TagName.ToLower().Contains(searchParam)));
 
-            return GetQuestionsWithVotes(allQuestions, authenticatedUserId);
+            return filteredQuestions;
         }
     }
 
@@ -83,50 +83,30 @@ public class QuestionsService : IQuestionsService
         }
     }
 
-    private List<VotedQuestionModel> GetQuestionsWithVotes(List<Question> questions,
-        int authenticatedUserId)
+    private IEnumerable<VotedQuestionModel> GetQuestionsWithTagsAndUserVote(int userId)
     {
-        var questionsWithVotes = new List<VotedQuestionModel>();
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            var userVotes = context.Votes.Where(_ => _.UserId == authenticatedUserId).ToList();
-            foreach (var question in questions)
-            {
-                var questionVote = userVotes.FirstOrDefault(_ => _.QuestionId == question.Id);
-                if (questionVote == null)
+            var questions = context.Questions.Include(_ => _.Tags)
+                .Include(_ => _.Votes)
+                .ToList()
+                .Select(_ => new VotedQuestionModel
                 {
-                    questionsWithVotes.Add(new VotedQuestionModel
-                    {
-                        Id = question.Id,
-                        Complexity = question.Complexity,
-                        Note = question.Note,
-                        EasyToGoogle = question.EasyToGoogle,
-                        QuestionContent = question.QuestionContent,
-                        UserVote = null,
-                        CreationDate = question.CreationDate,
-                        Tags = question.Tags,
-                        Vote = question.Vote
-                    });
-                }
-                else
-                {
-                    questionsWithVotes.Add(new VotedQuestionModel
-                    {
-                        Id = question.Id,
-                        Complexity = question.Complexity,
-                        Note = question.Note,
-                        EasyToGoogle = question.EasyToGoogle,
-                        QuestionContent = question.QuestionContent,
-                        CreationDate = question.CreationDate,
-                        Tags = question.Tags,
-                        Vote = question.Vote,
-                        UserVote = questionVote.UserVote
-                    });
-                }
-            }
-        }
+                    Id = _.Id,
+                    Complexity = _.Complexity,
+                    Note = _.Note,
+                    EasyToGoogle = _.EasyToGoogle,
+                    QuestionContent = _.QuestionContent,
+                    CreationDate = _.CreationDate,
+                    Tags = _.Tags,
+                    Vote = _.Vote,
+                    UserVote = _.Votes.Any(_ => _.UserId == userId)
+                        ? _.Votes.First(_ => _.UserId == userId).UserVote
+                        : null,
+                });
 
-        return questionsWithVotes;
+            return questions;
+        }
     }
 
     public void DeleteQuestion(int questionId)
