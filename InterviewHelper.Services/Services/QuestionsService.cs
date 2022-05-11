@@ -13,12 +13,10 @@ namespace InterviewHelper.Services.Services;
 public class QuestionsService : IQuestionsService
 {
     private readonly string _connectionString;
-    private readonly CommentRepository _commentRepository;
 
-    public QuestionsService(IOptions<DBConfiguration> config, CommentRepository commentRepository)
+    public QuestionsService(IOptions<DBConfiguration> config)
     {
         _connectionString = config.Value.ConnectionString;
-        _commentRepository = commentRepository;
     }
 
     public async Task AddQuestion(RequestQuestion newQuestion)
@@ -136,7 +134,7 @@ public class QuestionsService : IQuestionsService
         using var context = new InterviewHelperContext(_connectionString);
 
         var question = GetQuestionById(questionId);
-        
+
         var questionVotes = context.Votes.Where(_ => _.QuestionId == questionId).ToList();
         context.RemoveRange(questionVotes);
 

@@ -4,7 +4,6 @@ using InterviewHelper.Core.Exceptions;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.Models.RequestsModels;
 using InterviewHelper.Core.ServiceContracts;
-using InterviewHelper.DataAccess.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
