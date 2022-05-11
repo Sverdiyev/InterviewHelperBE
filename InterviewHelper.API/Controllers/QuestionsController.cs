@@ -51,7 +51,7 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("edit")]
         public async Task<IActionResult> UpdateQuestion(RequestQuestion updatedQuestion)
         {
             try

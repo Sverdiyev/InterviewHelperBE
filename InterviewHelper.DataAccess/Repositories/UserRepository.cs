@@ -47,11 +47,11 @@ public class UserRepository
         }
     }
 
-    public bool ValidUser(string email, string encriptedPassword)
+    public bool ValidUser(string email, string encryptedPassword)
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            return context.Users.Any(u => u.Email == email && u.Password == encriptedPassword);
+            return context.Users.Any(u => u.Email == email && u.Password == encryptedPassword);
         }
     }
 
@@ -60,6 +60,6 @@ public class UserRepository
         using (var context = new InterviewHelperContext(_connectionString))
         {
             return context.Users.First(_ => _.Email == email);
-        } 
+        }
     }
 }

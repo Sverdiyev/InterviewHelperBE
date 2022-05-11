@@ -13,4 +13,7 @@ public interface IQuestionsService
     void UpVoteQuestion(VoteRequest vote, User user);
     void DownVoteQuestion(VoteRequest vote, User user);
     void DeleteUserVote(VoteRequest vote, User user);
+    Question GetQuestionById(int questionId);
+    public bool CheckIfQuestionExists(int questionId);
+
 }
