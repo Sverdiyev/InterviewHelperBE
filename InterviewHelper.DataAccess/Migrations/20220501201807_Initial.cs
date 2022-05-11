@@ -126,7 +126,7 @@ namespace InterviewHelper.DataAccess.Migrations
                 column: "QuestionId");
             
             migrationBuilder.CreateIndex(
-                name: "IX_Votes_QuestionId",
+                name: "IX_Votes_UserId",
                 table: "Votes",
                 column: "UserId");
             

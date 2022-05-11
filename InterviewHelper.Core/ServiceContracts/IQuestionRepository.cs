@@ -1,9 +1,8 @@
-﻿using InterviewHelper.Core.Models;
-
-namespace InterviewHelper.Core.ServiceContracts
+﻿namespace InterviewHelper.Core.ServiceContracts
 {
-    public interface IQuestionRepository
+    interface IQuestionRepository
     {
-        IEnumerable<Question> GetAllQuestions();
     }
+  
+   
 }
