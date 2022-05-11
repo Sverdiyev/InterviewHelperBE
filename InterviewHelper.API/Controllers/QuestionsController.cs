@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace InterviewHelper.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class QuestionsController : ControllerBase
     {
@@ -41,7 +42,7 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("edit")]
         public async Task<IActionResult> UpdateQuestion(RequestQuestion updatedQuestion)
         {
             try

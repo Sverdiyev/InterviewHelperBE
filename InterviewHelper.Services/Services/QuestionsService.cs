@@ -2,6 +2,7 @@ using InterviewHelper.Core.Exceptions;
 using InterviewHelper.Core.Models;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.DataAccess.Data;
+using InterviewHelper.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -10,10 +11,12 @@ namespace InterviewHelper.Services.Services;
 public class QuestionsService : IQuestionsService
 {
     private readonly string _connectionString;
+    private readonly CommentRepository _commentRepository;
 
-    public QuestionsService(IOptions<DBConfiguration> config)
+    public QuestionsService(IOptions<DBConfiguration> config, CommentRepository commentRepository)
     {
         _connectionString = config.Value.ConnectionString;
+        _commentRepository = commentRepository;
     }
 
     public async Task AddQuestion(RequestQuestion newQuestion)
@@ -81,14 +84,23 @@ public class QuestionsService : IQuestionsService
     public void DeleteQuestion(int questionId)
     {
         using var context = new InterviewHelperContext(_connectionString);
-        var question = context.Questions.FirstOrDefault(q => q.Id == questionId);
+
+        var question = GetQuestionById(questionId);
+        
+        context.Remove(question);
+        context.SaveChanges();
+    }
+
+    public Question GetQuestionById(int questionId)
+    {
+        using var context = new InterviewHelperContext(_connectionString);
+        var question = context.Questions.FirstOrDefault(_ => _.Id == questionId);
         if (question == null)
         {
             throw new QuestionNotFoundException();
         }
 
-        context.Remove(question);
-        context.SaveChanges();
+        return question;
     }
 
     public List<string> GetQuestionsByIds(List<int> questionIds)
@@ -99,5 +111,13 @@ public class QuestionsService : IQuestionsService
                 .Select(_ => _.QuestionContent).ToList();
             return questionsContents;
         }
+    }
+
+    public bool CheckIfQuestionExists(int questionId)
+    {
+        using var context = new InterviewHelperContext(_connectionString);
+        var question = context.Questions.FirstOrDefault(_ => _.Id == questionId);
+
+        return question != null;
     }
 }

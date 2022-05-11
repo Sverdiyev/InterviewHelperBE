@@ -22,6 +22,34 @@ namespace InterviewHelper.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("InterviewHelper.Core.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CommentContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("InterviewHelper.Core.Models.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -106,6 +134,15 @@ namespace InterviewHelper.DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("InterviewHelper.Core.Models.Comment", b =>
+                {
+                    b.HasOne("InterviewHelper.Core.Models.Question", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("InterviewHelper.Core.Models.Tag", b =>
                 {
                     b.HasOne("InterviewHelper.Core.Models.Question", null)
@@ -117,6 +154,8 @@ namespace InterviewHelper.DataAccess.Migrations
 
             modelBuilder.Entity("InterviewHelper.Core.Models.Question", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618

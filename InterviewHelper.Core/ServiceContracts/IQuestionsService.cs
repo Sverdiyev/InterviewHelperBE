@@ -9,4 +9,7 @@ public interface IQuestionsService
     Task UpdateQuestion(RequestQuestion updatedQuestion);
     void DeleteQuestion(int questionId);
     List<string> GetQuestionsByIds(List<int> questionIds);
+    Question GetQuestionById(int questionId);
+    public bool CheckIfQuestionExists(int questionId);
+
 }
