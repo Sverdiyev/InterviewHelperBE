@@ -1,5 +1,6 @@
 using InterviewHelper.Core.Exceptions;
 using InterviewHelper.Core.Models;
+using InterviewHelper.Core.Models.RequestsModels;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.DataAccess.Data;
 using InterviewHelper.DataAccess.Repositories;
@@ -93,7 +94,7 @@ public class QuestionsService : IQuestionsService
                     Id = _.Id,
                     Complexity = _.Complexity,
                     Note = _.Note,
-                    EasyToGoogle = _.EasyToGoogle,
+                    HardToGoogle = _.HardToGoogle,
                     QuestionContent = _.QuestionContent,
                     CreationDate = _.CreationDate,
                     Tags = _.Tags,

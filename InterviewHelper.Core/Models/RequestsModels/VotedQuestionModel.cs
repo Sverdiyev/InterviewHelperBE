@@ -8,7 +8,7 @@ public class VotedQuestionModel
     public string QuestionContent { get; set; }
     public string Note { get; set; } 
     public int Vote { get; set; }
-    public bool EasyToGoogle { get; set; }
+    public bool HardToGoogle { get; set; }
     public IList<Tag> Tags { get; set; } = new List<Tag>();
     public string UserVote {get; set; }
 }
