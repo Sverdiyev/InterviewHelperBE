@@ -61,6 +61,16 @@ public class QuestionsService : IQuestionsService
         }
     }
 
+    public List<Tag> GetQuestionTags()
+    {
+        using (var context = new InterviewHelperContext(_connectionString))
+        {
+            return context.Tags.Where(tag => tag.TagName != string.Empty).GroupBy(tag => tag.TagName)
+                .Select(groupedTags => groupedTags.First()).ToList();
+        }
+    }
+
+    
     public async Task UpdateQuestion(RequestQuestion updatedQuestion)
     {
         using (var context = new InterviewHelperContext(_connectionString))

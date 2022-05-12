@@ -9,4 +9,5 @@ public interface IQuestionsService
     void DeleteQuestion(int questionId);
     List<string> GetQuestionsByIds(List<int> questionIds);
     List<Question> GetQuestionsWithSearch(RequestQuestionSearch searchParams);
+    List<Tag> GetQuestionTags();
 }

@@ -21,6 +21,12 @@ namespace InterviewHelper.Api.Controllers
             _questionsService = questionsService;
         }
 
+        [HttpGet("/fetch-questions-tags")]
+        public IActionResult PostQuestionSearch()
+        {
+            return Ok(_questionsService.GetQuestionTags());
+        }
+        
         [HttpPost("/fetch-questions")]
         public IActionResult PostQuestionSearch(RequestQuestionSearch searchParams)
         {
