@@ -105,4 +105,14 @@ public class UserService : IUserService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    public User GetUserByEmail(string email)
+    {
+        return _userRepository.GetUser(email);
+    }
+    
+    public bool UserExists(int userId)
+    {
+        return _userRepository.UserExists(userId);
+    }
 }

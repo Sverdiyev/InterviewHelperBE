@@ -20,5 +20,5 @@ public class RequestQuestion
     public string QuestionContent { get; set; }
     public string Note { get; set; }
     public List<string> Tags { get; set; }
-    public bool EasyToGoogle { get; set; }
+    public bool HardToGoogle { get; set; }
 }

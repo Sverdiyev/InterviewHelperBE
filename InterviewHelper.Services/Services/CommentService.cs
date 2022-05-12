@@ -9,11 +9,14 @@ public class CommentService : ICommentService
 {
     private readonly CommentRepository _commentRepository;
     private readonly IQuestionsService _questionService;
+    private readonly IUserService _userService;
+    
 
-    public CommentService(CommentRepository commentRepository, IQuestionsService questionService)
+    public CommentService(CommentRepository commentRepository, IQuestionsService questionService, IUserService userService)
     {
         _commentRepository = commentRepository;
         _questionService = questionService;
+        _userService = userService;
     }
 
     public List<Comment> GetAllQuestionComments(int questionId)
@@ -29,6 +32,10 @@ public class CommentService : ICommentService
 
     public Comment AddComment(CommentRequest newComment)
     {
+        if (!_userService.UserExists(newComment.UserId))
+        {
+            throw new UserNotFoundException();
+        }
         var commentToAdd = new Comment
         {
             CommentContent = newComment.CommentContent,

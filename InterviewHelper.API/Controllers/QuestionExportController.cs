@@ -3,12 +3,14 @@ using System.Text;
 using InterviewHelper.Core.Exceptions;
 using InterviewHelper.Core.Models.PdfExporterModels;
 using InterviewHelper.Core.ServiceContracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
 namespace InterviewHelper.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class QuestionExportController : ControllerBase
 {
