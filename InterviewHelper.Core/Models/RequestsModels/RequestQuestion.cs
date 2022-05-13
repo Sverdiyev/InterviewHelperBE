@@ -34,6 +34,10 @@ public class RequestQuestionSearch
 
     public bool IsEmpty
     {
-        get { return Search == null && Complexity == null && Tags == null & HardToGoogle == null && Favorite == null; }
+        get
+        {
+            return Vote == null && Search == null && Complexity == null && Tags == null & HardToGoogle == null &&
+                   Favorite == null;
+        }
     }
 }
