@@ -72,7 +72,7 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpPut("edit")]
+        [HttpPut()]
         public async Task<IActionResult> UpdateQuestion(RequestQuestion updatedQuestion)
         {
             try
@@ -113,11 +113,6 @@ namespace InterviewHelper.Api.Controllers
         {
             var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
             var user = _userService.GetUserByEmail(userSessionEmail);
-            if (user.Id != vote.UserId)
-            {
-                return BadRequest("User is not authorized to perform this action");
-            }
-
             try
             {
                 _questionsService.UpVoteQuestion(vote, user);
@@ -138,10 +133,6 @@ namespace InterviewHelper.Api.Controllers
         {
             var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
             var user = _userService.GetUserByEmail(userSessionEmail);
-            if (user.Id != vote.UserId)
-            {
-                return BadRequest("User is not authorized to perform this action");
-            }
 
             try
             {
@@ -163,11 +154,6 @@ namespace InterviewHelper.Api.Controllers
         {
             var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
             var user = _userService.GetUserByEmail(userSessionEmail);
-
-            if (user.Id != vote.UserId)
-            {
-                return BadRequest("User is not authorized to perform this action");
-            }
 
             try
             {

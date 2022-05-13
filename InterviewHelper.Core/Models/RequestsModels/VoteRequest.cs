@@ -2,6 +2,5 @@
 
 public class VoteRequest
 {
-    public int UserId { get; set; }
     public int QuestionId { get; set; }
 }
