@@ -37,33 +37,30 @@ public class QuestionsService : IQuestionsService
         }
     }
 
-    public List<VotedQuestionModel> GetQuestionsWithSearch(RequestQuestionSearch searchParams, int authenticatedUserId)
+    public IEnumerable<VotedQuestionModel> GetQuestionsWithSearch(RequestQuestionSearch searchParams,
+        int authenticatedUserId)
     {
-        using (var context = new InterviewHelperContext(_connectionString))
+        if (searchParams.IsEmpty)
         {
-            if (searchParams.IsEmpty)
-            {
-                return GetQuestionsWithTagsAndUserVote(authenticatedUserId).ToList();
-            }
-
-            var allQuestions = GetQuestionsWithTagsAndUserVote(authenticatedUserId);
-            //TODO:  to add filter by Favorite once it is added
-            var filteredQuestions = allQuestions
-                .Where(q => searchParams.Complexity == null || searchParams.Complexity.Contains(q.Complexity))
-                .Where(q => searchParams.Tags == null ||
-                            q.Tags.Any(tag => searchParams.Tags.Contains(tag.TagName)))
-                .Where(q => searchParams.HardToGoogle == null || q.HardToGoogle == searchParams.HardToGoogle)
-                .Where(q => searchParams.Vote == null ||
-                            q.Vote > searchParams.Vote.Min() && q.Vote < searchParams.Vote.Max())
-                .Where(q => searchParams.Search == null ||
-                            q.Note.ToLower().Contains(searchParams.Search) ||
-                            q.QuestionContent.ToLower().Contains(searchParams.Search) ||
-                            q.Complexity.ToLower().Contains(searchParams.Search) ||
-                            q.Tags.Any(t => t.TagName.ToLower().Contains(searchParams.Search)))
-                .ToList();
-
-            return filteredQuestions;
+            return GetQuestionsWithTagsAndUserVote(authenticatedUserId);
         }
+
+        var allQuestions = GetQuestionsWithTagsAndUserVote(authenticatedUserId);
+        //TODO:  to add filter by Favorite once it is added
+        var filteredQuestions = allQuestions
+            .Where(q => searchParams.Complexity == null || searchParams.Complexity.Contains(q.Complexity))
+            .Where(q => searchParams.Tags == null ||
+                        q.Tags.Any(tag => searchParams.Tags.Contains(tag.TagName)))
+            .Where(q => searchParams.HardToGoogle == null || q.HardToGoogle == searchParams.HardToGoogle)
+            .Where(q => searchParams.Vote == null ||
+                        q.Vote > searchParams.Vote.Min() && q.Vote < searchParams.Vote.Max())
+            .Where(q => searchParams.Search == null ||
+                        q.Note.ToLower().Contains(searchParams.Search) ||
+                        q.QuestionContent.ToLower().Contains(searchParams.Search) ||
+                        q.Complexity.ToLower().Contains(searchParams.Search) ||
+                        q.Tags.Any(t => t.TagName.ToLower().Contains(searchParams.Search)));
+
+        return filteredQuestions;
     }
 
     public List<Tag> GetQuestionTags()
