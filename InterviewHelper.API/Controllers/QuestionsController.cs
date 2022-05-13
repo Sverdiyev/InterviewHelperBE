@@ -18,7 +18,8 @@ namespace InterviewHelper.Api.Controllers
         private readonly IQuestionsService _questionsService;
         private readonly IUserService _userService;
 
-        public QuestionsController(ILogger<QuestionsController> logger, IQuestionsService questionsService, IUserService userService)
+        public QuestionsController(ILogger<QuestionsController> logger, IQuestionsService questionsService,
+            IUserService userService)
         {
             _logger = logger;
             _questionsService = questionsService;
@@ -28,18 +29,33 @@ namespace InterviewHelper.Api.Controllers
         [HttpGet("/fetch-questions-tags")]
         public IActionResult PostQuestionSearch()
         {
-            return Ok(_questionsService.GetQuestionTags());
+            try
+            {
+                var tags = _questionsService.GetQuestionTags();
+                return Ok(tags);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
-        
+
         [HttpPost("/fetch-questions")]
         public IActionResult PostQuestionSearch(RequestQuestionSearch searchParams)
         {
-            var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
-            var user = _userService.GetUserByEmail(userSessionEmail);
+            try
+            {
+                var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
+                var user = _userService.GetUserByEmail(userSessionEmail);
 
-            var questions = _questionsService.GetQuestionsWithSearch(searchParams,user.Id);
+                var questions = _questionsService.GetQuestionsWithSearch(searchParams, user.Id);
 
-            return Ok(questions);
+                return Ok(questions);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
 
         [HttpPost]
