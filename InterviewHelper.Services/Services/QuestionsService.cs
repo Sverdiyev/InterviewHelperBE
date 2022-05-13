@@ -180,7 +180,7 @@ public class QuestionsService : IQuestionsService
                 var newUserVote = new Vote
                 {
                     QuestionId = vote.QuestionId,
-                    UserId = vote.UserId,
+                    UserId = authenticatedUser.Id,
                     UserVote = userVote
                 };
 
