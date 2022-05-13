@@ -26,12 +26,12 @@ namespace InterviewHelper.Api.Controllers
             _userService = userService;
         }
 
-        [HttpGet("/fetch-questions-tags")]
-        public IActionResult PostQuestionSearch()
+        [HttpGet("/questions/tags")]
+        public IActionResult GetQuestionsTags()
         {
             try
             {
-                var tags = _questionsService.GetQuestionTags();
+                var tags = _questionsService.GetQuestionsTags();
                 return Ok(tags);
             }
             catch (Exception ex)
@@ -40,8 +40,8 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpPost("/fetch-questions")]
-        public IActionResult PostQuestionSearch(RequestQuestionSearch searchParams)
+        [HttpPost("/questions")]
+        public IActionResult GetQuestions(RequestQuestionSearch searchParams)
         {
             try
             {
@@ -58,7 +58,7 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("/questions/add")]
         public IActionResult PostAddQuestion(RequestQuestion newQuestion)
         {
             try
@@ -72,7 +72,7 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpPut()]
+        [HttpPut("/questions/edit")]
         public async Task<IActionResult> UpdateQuestion(RequestQuestion updatedQuestion)
         {
             try

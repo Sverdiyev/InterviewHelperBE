@@ -3,7 +3,6 @@ using InterviewHelper.Core.Models;
 using InterviewHelper.Core.Models.RequestsModels;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.DataAccess.Data;
-using InterviewHelper.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -63,7 +62,7 @@ public class QuestionsService : IQuestionsService
         return filteredQuestions;
     }
 
-    public List<Tag> GetQuestionTags()
+    public List<Tag> GetQuestionsTags()
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
