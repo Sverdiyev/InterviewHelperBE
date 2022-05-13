@@ -46,12 +46,20 @@ public class UserRepository
             return context.Users.Any(u => u.Email == email);
         }
     }
-
-    public bool ValidUser(string email, string encriptedPassword)
+    
+    public bool UserExists(int userId)
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            return context.Users.Any(u => u.Email == email && u.Password == encriptedPassword);
+            return context.Users.Any(u => u.Id == userId);
+        }  
+    }
+    
+    public bool ValidUser(string email, string encryptedPassword)
+    {
+        using (var context = new InterviewHelperContext(_connectionString))
+        {
+            return context.Users.Any(u => u.Email == email && u.Password == encryptedPassword);
         }
     }
 
@@ -60,6 +68,6 @@ public class UserRepository
         using (var context = new InterviewHelperContext(_connectionString))
         {
             return context.Users.First(_ => _.Email == email);
-        } 
+        }
     }
 }

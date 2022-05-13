@@ -100,9 +100,19 @@ public class UserService : IUserService
 
         var token = new JwtSecurityToken(null, null,
                                         claims,
-                                        expires: DateTime.Now.AddMinutes(20),
+                                        expires: DateTime.Now.AddMinutes(60),
                                         signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public User GetUserByEmail(string email)
+    {
+        return _userRepository.GetUser(email);
+    }
+    
+    public bool UserExists(int userId)
+    {
+        return _userRepository.UserExists(userId);
     }
 }
