@@ -50,6 +50,7 @@ namespace InterviewHelper.Api.Controllers
                 {
                     return BadRequest("User is not authorized to perform this action");
                 }
+
                 var response = _commentService.AddComment(newComment);
                 return Ok(response);
             }
@@ -73,6 +74,7 @@ namespace InterviewHelper.Api.Controllers
                 {
                     return BadRequest("User is not allowed to modify the comment");
                 }
+
                 _commentService.EditComment(comment);
                 return Ok();
             }
@@ -96,6 +98,7 @@ namespace InterviewHelper.Api.Controllers
                 {
                     return BadRequest("User is not allowed to delete the comment");
                 }
+
                 _commentService.DeleteComment(commentId);
                 return Ok();
             }

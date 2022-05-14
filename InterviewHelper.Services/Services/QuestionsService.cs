@@ -37,16 +37,16 @@ public class QuestionsService : IQuestionsService
         }
     }
 
-    public IEnumerable<VotedQuestionModel> GetQuestions(string? rawSearchParam, int authenticatedUserId)
+    public IEnumerable<QuestionActionsModel> GetQuestions(string? rawSearchParam, int authenticatedUserId)
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
             if (string.IsNullOrEmpty(rawSearchParam))
             {
-                return GetQuestionsWithTagsAndUserVote(authenticatedUserId);
+                return GetQuestionsWithTagsAndUserVoteAndUserFavourite(authenticatedUserId);
             }
 
-            var allQuestions = GetQuestionsWithTagsAndUserVote(authenticatedUserId);
+            var allQuestions = GetQuestionsWithTagsAndUserVoteAndUserFavourite(authenticatedUserId);
 
             var searchParam = rawSearchParam.ToLower().Trim();
 
@@ -82,14 +82,15 @@ public class QuestionsService : IQuestionsService
         }
     }
 
-    private IEnumerable<VotedQuestionModel> GetQuestionsWithTagsAndUserVote(int userId)
+    private IEnumerable<QuestionActionsModel> GetQuestionsWithTagsAndUserVoteAndUserFavourite(int userId)
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
             var questions = context.Questions.Include(_ => _.Tags)
                 .Include(_ => _.Votes)
+                .Include(_ => _.Favourites)
                 .ToList()
-                .Select(_ => new VotedQuestionModel
+                .Select(_ => new QuestionActionsModel
                 {
                     Id = _.Id,
                     Complexity = _.Complexity,
@@ -102,6 +103,9 @@ public class QuestionsService : IQuestionsService
                     UserVote = _.Votes.Any(_ => _.UserId == userId)
                         ? _.Votes.First(_ => _.UserId == userId).UserVote
                         : null,
+                    IsUserFavourite = _.Favourites.Any(_ => _.UserId == userId)
+                        ? _.Favourites.First(_ => _.UserId == userId).IsUserFavourite
+                        : false,
                 });
 
             return questions;
@@ -151,11 +155,11 @@ public class QuestionsService : IQuestionsService
         return question != null;
     }
 
-    private void VoteQuestion(string userVote, VoteRequest vote, User authenticatedUser)
+    private void VoteQuestion(string userVote, QuestionActionsRequest questionActions, User authenticatedUser)
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            var questionToVote = context.Questions.FirstOrDefault(_ => _.Id == vote.QuestionId);
+            var questionToVote = context.Questions.FirstOrDefault(_ => _.Id == questionActions.QuestionId);
             if (questionToVote == null) throw new QuestionNotFoundException();
 
             var voteExists = context.Votes.FirstOrDefault(_ =>
@@ -179,7 +183,7 @@ public class QuestionsService : IQuestionsService
             {
                 var newUserVote = new Vote
                 {
-                    QuestionId = vote.QuestionId,
+                    QuestionId = questionActions.QuestionId,
                     UserId = authenticatedUser.Id,
                     UserVote = userVote
                 };
@@ -194,11 +198,11 @@ public class QuestionsService : IQuestionsService
         }
     }
 
-    public void DeleteUserVote(VoteRequest vote, User authenticatedUser)
+    public void DeleteUserVote(QuestionActionsRequest questionActions, User authenticatedUser)
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            var questionToDeleteVote = context.Questions.FirstOrDefault(_ => _.Id == vote.QuestionId);
+            var questionToDeleteVote = context.Questions.FirstOrDefault(_ => _.Id == questionActions.QuestionId);
             if (questionToDeleteVote == null)
             {
                 throw new QuestionNotFoundException();
@@ -220,13 +224,58 @@ public class QuestionsService : IQuestionsService
         }
     }
 
-    public void UpVoteQuestion(VoteRequest vote, User authenticatedUser)
+    public void UpVoteQuestion(QuestionActionsRequest questionActions, User authenticatedUser)
     {
-        VoteQuestion("up", vote, authenticatedUser);
+        VoteQuestion("up", questionActions, authenticatedUser);
     }
 
-    public void DownVoteQuestion(VoteRequest vote, User authenticatedUser)
+    public void DownVoteQuestion(QuestionActionsRequest questionActions, User authenticatedUser)
     {
-        VoteQuestion("down", vote, authenticatedUser);
+        VoteQuestion("down", questionActions, authenticatedUser);
+    }
+
+    public void AddFavouriteQuestion(QuestionActionsRequest questionActions, User authenticatedUser)
+    {
+        using (var context = new InterviewHelperContext(_connectionString))
+        {
+            var questionToFavourite = context.Questions.FirstOrDefault(_ => _.Id == questionActions.QuestionId);
+            if (questionToFavourite == null) throw new QuestionNotFoundException();
+
+            var favouriteExists = context.Favourites.FirstOrDefault(_ =>
+                _.QuestionId == questionToFavourite.Id && _.UserId == authenticatedUser.Id);
+
+            if (favouriteExists != null)
+            {
+                favouriteExists.IsUserFavourite = true;
+                context.SaveChanges();
+            }
+
+            var newUserFavourite = new Favourite
+            {
+                QuestionId = questionActions.QuestionId,
+                UserId = authenticatedUser.Id,
+                IsUserFavourite = true
+            };
+
+            context.Favourites.Add(newUserFavourite);
+            context.SaveChanges();
+        }
+    }
+
+    public void DeleteFavouriteQuestion(QuestionActionsRequest questionActions, User authenticatedUser)
+    {
+        using (var context = new InterviewHelperContext(_connectionString))
+        {
+            var questionToFavourite = context.Questions.FirstOrDefault(_ => _.Id == questionActions.QuestionId);
+            if (questionToFavourite == null) throw new QuestionNotFoundException();
+
+            var favouriteExists = context.Favourites.FirstOrDefault(_ =>
+                _.QuestionId == questionToFavourite.Id && _.UserId == authenticatedUser.Id);
+
+            if (favouriteExists == null) throw new FavouriteNotFoundException();
+
+            context.Favourites.Remove(favouriteExists);
+            context.SaveChanges();
+        }
     }
 }

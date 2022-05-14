@@ -1,6 +1,6 @@
 ﻿namespace InterviewHelper.Core.Models.RequestsModels;
 
-public class VotedQuestionModel
+public class QuestionActionsModel
 {
     public int Id { get; set; }
     public DateTime CreationDate { get; set; }
@@ -11,4 +11,5 @@ public class VotedQuestionModel
     public bool HardToGoogle { get; set; }
     public IList<Tag> Tags { get; set; } = new List<Tag>();
     public string UserVote {get; set; }
+    public bool IsUserFavourite { get; set; }
 }
