@@ -26,7 +26,7 @@ namespace InterviewHelper.Api.Controllers
             _userService = userService;
         }
 
-        [HttpGet("/questions/tags")]
+        [HttpGet("tags")]
         public IActionResult GetQuestionsTags()
         {
             try
@@ -40,7 +40,7 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpPost("/questions")]
+        [HttpPost]
         public IActionResult GetQuestions(RequestQuestionSearch searchParams)
         {
             try
@@ -58,7 +58,7 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpPost("/questions/add")]
+        [HttpPost("add")]
         public IActionResult PostAddQuestion(RequestQuestion newQuestion)
         {
             try
@@ -72,7 +72,7 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpPut("/questions/edit")]
+        [HttpPut("edit")]
         public async Task<IActionResult> UpdateQuestion(RequestQuestion updatedQuestion)
         {
             try
