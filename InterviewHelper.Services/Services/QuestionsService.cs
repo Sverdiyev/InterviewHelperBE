@@ -56,7 +56,7 @@ public class QuestionsService : IQuestionsService
                             q.Complexity.ToLower().Contains(searchParam) ||
                             q.Tags.Any(t => t.TagName.ToLower().Contains(searchParam)));
 
-            return filteredQuestions;
+            return filteredQuestions.OrderByDescending(_ => _.CreationDate);;
         }
     }
 
