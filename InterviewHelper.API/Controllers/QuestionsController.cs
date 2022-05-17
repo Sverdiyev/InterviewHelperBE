@@ -41,7 +41,7 @@ namespace InterviewHelper.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetQuestions(RequestQuestionSearch searchParams)
+        public IActionResult GetQuestions(QuestionSearchRequest searchParams)
         {
             try
             {

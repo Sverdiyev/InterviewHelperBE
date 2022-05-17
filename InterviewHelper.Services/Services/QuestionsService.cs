@@ -36,7 +36,7 @@ public class QuestionsService : IQuestionsService
         }
     }
 
-    public IEnumerable<VotedQuestionModel> GetQuestionsWithSearch(RequestQuestionSearch searchParams,
+    public IEnumerable<VotedQuestionModel> GetQuestionsWithSearch(QuestionSearchRequest searchParams,
         int authenticatedUserId)
     {
         if (searchParams.IsEmpty)
@@ -47,17 +47,17 @@ public class QuestionsService : IQuestionsService
         var allQuestions = GetQuestionsWithTagsAndUserVote(authenticatedUserId);
         //TODO:  to add filter by Favorite once it is added
         var filteredQuestions = allQuestions
-            .Where(q => searchParams.Complexity == null || searchParams.Complexity.Contains(q.Complexity))
-            .Where(q => searchParams.Tags == null ||
-                        q.Tags.Any(tag => searchParams.Tags.Contains(tag.TagName)))
-            .Where(q => searchParams.HardToGoogle == null || q.HardToGoogle == searchParams.HardToGoogle)
-            .Where(q => searchParams.Vote == null ||
-                        q.Vote > searchParams.Vote.Min() && q.Vote < searchParams.Vote.Max())
-            .Where(q => searchParams.Search == null ||
-                        q.Note.ToLower().Contains(searchParams.Search) ||
-                        q.QuestionContent.ToLower().Contains(searchParams.Search) ||
-                        q.Complexity.ToLower().Contains(searchParams.Search) ||
-                        q.Tags.Any(t => t.TagName.ToLower().Contains(searchParams.Search)));
+            .Where(_ => searchParams.Complexity == null || searchParams.Complexity.Contains(_.Complexity))
+            .Where(_ => searchParams.Tags == null ||
+                        _.Tags.Any(tag => searchParams.Tags.Contains(tag.TagName)))
+            .Where(_ => searchParams.HardToGoogle == null || _.HardToGoogle == searchParams.HardToGoogle)
+            .Where(_ => searchParams.Vote == null ||
+                        _.Vote > searchParams.Vote.Min() && _.Vote < searchParams.Vote.Max())
+            .Where(_ => searchParams.Search == null ||
+                        _.Note.ToLower().Contains(searchParams.Search) ||
+                        _.QuestionContent.ToLower().Contains(searchParams.Search) ||
+                        _.Complexity.ToLower().Contains(searchParams.Search) ||
+                        _.Tags.Any(_ => _.TagName.ToLower().Contains(searchParams.Search)));
 
         return filteredQuestions;
     }
@@ -66,8 +66,7 @@ public class QuestionsService : IQuestionsService
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            return context.Tags.Where(tag => tag.TagName != string.Empty).GroupBy(tag => tag.TagName)
-                .Select(groupedTags => groupedTags.First()).ToList();
+            return context.Tags.Where(_ => _.TagName != string.Empty).DistinctBy(_ => _.TagName).ToList();
         }
     }
 

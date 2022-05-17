@@ -23,7 +23,7 @@ public class RequestQuestion
     public bool HardToGoogle { get; set; }
 }
 
-public class RequestQuestionSearch
+public class QuestionSearchRequest
 {
     public string? Search { get; set; }
     public List<string>? Complexity { get; set; }

@@ -9,7 +9,7 @@ public interface IQuestionsService
     Task UpdateQuestion(RequestQuestion updatedQuestion);
     void DeleteQuestion(int questionId);
     List<string> GetQuestionsByIds(List<int> questionIds);
-    IEnumerable<VotedQuestionModel> GetQuestionsWithSearch(RequestQuestionSearch searchParams, int userId);
+    IEnumerable<VotedQuestionModel> GetQuestionsWithSearch(QuestionSearchRequest searchParams, int userId);
     List<Tag> GetQuestionsTags();
     void UpVoteQuestion(VoteRequest vote, User user);
     void DownVoteQuestion(VoteRequest vote, User user);
