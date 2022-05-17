@@ -62,11 +62,11 @@ public class QuestionsService : IQuestionsService
         return filteredQuestions;
     }
 
-    public List<Tag> GetQuestionsTags()
+    public List<string> GetQuestionsTags()
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            return context.Tags.Where(_ => _.TagName != string.Empty).DistinctBy(_ => _.TagName).ToList();
+            return context.Tags.Where(_ => _.TagName != string.Empty).Select(_ => _.TagName).Distinct().ToList();
         }
     }
 

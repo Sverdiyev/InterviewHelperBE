@@ -10,7 +10,7 @@ public interface IQuestionsService
     void DeleteQuestion(int questionId);
     List<string> GetQuestionsByIds(List<int> questionIds);
     IEnumerable<VotedQuestionModel> GetQuestionsWithSearch(QuestionSearchRequest searchParams, int userId);
-    List<Tag> GetQuestionsTags();
+    List<string> GetQuestionsTags();
     void UpVoteQuestion(VoteRequest vote, User user);
     void DownVoteQuestion(VoteRequest vote, User user);
     void DeleteUserVote(VoteRequest vote, User user);
