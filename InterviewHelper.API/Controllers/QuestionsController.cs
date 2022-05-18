@@ -26,15 +26,36 @@ namespace InterviewHelper.Api.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
-        public IActionResult GetQuestions(string? search)
+        [HttpGet("tags")]
+        public IActionResult GetQuestionsTags()
         {
-            var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
-            var user = _userService.GetUserByEmail(userSessionEmail);
+            try
+            {
+                var tags = _questionsService.GetQuestionsTags();
+                return Ok(tags);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
 
-            var questions = _questionsService.GetQuestions(search, user.Id);
+        [HttpPost]
+        public IActionResult GetQuestions(QuestionSearchRequest searchParams)
+        {
+            try
+            {
+                var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
+                var user = _userService.GetUserByEmail(userSessionEmail);
 
-            return Ok(questions);
+                var questions = _questionsService.GetQuestionsWithSearch(searchParams, user.Id);
+
+                return Ok(questions);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
 
         [HttpPost("add")]

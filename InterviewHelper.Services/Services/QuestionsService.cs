@@ -38,28 +38,40 @@ public class QuestionsService : IQuestionsService
     }
 
     public IEnumerable<QuestionActionsModel> GetQuestions(string? rawSearchParam, int authenticatedUserId)
+    public IEnumerable<VotedQuestionModel> GetQuestionsWithSearch(QuestionSearchRequest searchParams,
+        int authenticatedUserId)
+    {
+        if (searchParams.IsEmpty)
+        {
+            return GetQuestionsWithTagsAndUserVote(authenticatedUserId);
+        }
+
+        var allQuestions = GetQuestionsWithTagsAndUserVote(authenticatedUserId);
+        //TODO:  to add filter by Favorite once it is added
+        var filteredQuestions = allQuestions
+            .Where(_ => searchParams.Complexity == null || searchParams.Complexity.Contains(_.Complexity))
+            .Where(_ => searchParams.Tags == null ||
+                        _.Tags.Any(tag => searchParams.Tags.Contains(tag.TagName)))
+            .Where(_ => searchParams.HardToGoogle == null || _.HardToGoogle == searchParams.HardToGoogle)
+            .Where(_ => searchParams.Vote == null ||
+                        _.Vote > searchParams.Vote.Min() && _.Vote < searchParams.Vote.Max())
+            .Where(_ => searchParams.Search == null ||
+                        _.Note.ToLower().Contains(searchParams.Search) ||
+                        _.QuestionContent.ToLower().Contains(searchParams.Search) ||
+                        _.Complexity.ToLower().Contains(searchParams.Search) ||
+                        _.Tags.Any(_ => _.TagName.ToLower().Contains(searchParams.Search)));
+
+        return filteredQuestions.OrderByDescending(_ => _.CreationDate);
+    }
+
+    public List<string> GetQuestionsTags()
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            if (string.IsNullOrEmpty(rawSearchParam))
-            {
-                return GetQuestionsWithTagsAndUserVoteAndUserFavourite(authenticatedUserId);
-            }
-
-            var allQuestions = GetQuestionsWithTagsAndUserVoteAndUserFavourite(authenticatedUserId);
-
-            var searchParam = rawSearchParam.ToLower().Trim();
-
-            var filteredQuestions = allQuestions
-                .Where(q => q.Note.ToLower().Contains(searchParam) ||
-                            q.QuestionContent.ToLower().Contains(searchParam) ||
-                            q.Complexity.ToLower().Contains(searchParam) ||
-                            q.Tags.Any(t => t.TagName.ToLower().Contains(searchParam)));
-
-            return filteredQuestions.OrderByDescending(_ => _.CreationDate);;
+            return context.Tags.Where(_ => _.TagName != string.Empty).Select(_ => _.TagName).Distinct().ToList();
         }
     }
-
+    
     public async Task UpdateQuestion(RequestQuestion updatedQuestion)
     {
         using (var context = new InterviewHelperContext(_connectionString))

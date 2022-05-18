@@ -22,3 +22,22 @@ public class RequestQuestion
     public List<string> Tags { get; set; }
     public bool HardToGoogle { get; set; }
 }
+
+public class QuestionSearchRequest
+{
+    public string? Search { get; set; }
+    public List<string>? Complexity { get; set; }
+    public List<string>? Tags { get; set; }
+    public List<int>? Vote { get; set; }
+    public bool? HardToGoogle { get; set; }
+    public bool? Favorite { get; set; }
+
+    public bool IsEmpty
+    {
+        get
+        {
+            return Vote == null && Search == null && Complexity == null && Tags == null & HardToGoogle == null &&
+                   Favorite == null;
+        }
+    }
+}
