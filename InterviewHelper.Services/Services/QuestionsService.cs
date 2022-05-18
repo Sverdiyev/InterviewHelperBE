@@ -260,16 +260,18 @@ public class QuestionsService : IQuestionsService
                 favouriteExists.IsUserFavourite = true;
                 context.SaveChanges();
             }
-
-            var newUserFavourite = new Favourite
+            else
             {
-                QuestionId = questionId,
-                UserId = authenticatedUser.Id,
-                IsUserFavourite = true
-            };
+                var newUserFavourite = new Favourite
+                {
+                    QuestionId = questionId,
+                    UserId = authenticatedUser.Id,
+                    IsUserFavourite = true
+                };
 
-            context.Favourites.Add(newUserFavourite);
-            context.SaveChanges();
+                context.Favourites.Add(newUserFavourite);
+                context.SaveChanges();
+            }
         }
     }
 
