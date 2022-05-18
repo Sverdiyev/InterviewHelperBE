@@ -6,10 +6,11 @@ namespace InterviewHelper.Core.ServiceContracts;
 public interface IQuestionsService
 {
     Task AddQuestion(RequestQuestion newQuestion);
-    IEnumerable<VotedQuestionModel> GetQuestions(string? searchParam, int userId);
     Task UpdateQuestion(RequestQuestion updatedQuestion);
     void DeleteQuestion(int questionId);
     List<string> GetQuestionsByIds(List<int> questionIds);
+    IEnumerable<VotedQuestionModel> GetQuestionsWithSearch(QuestionSearchRequest searchParams, int userId);
+    List<string> GetQuestionsTags();
     void UpVoteQuestion(VoteRequest vote, User user);
     void DownVoteQuestion(VoteRequest vote, User user);
     void DeleteUserVote(VoteRequest vote, User user);

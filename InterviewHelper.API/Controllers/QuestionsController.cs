@@ -18,25 +18,47 @@ namespace InterviewHelper.Api.Controllers
         private readonly IQuestionsService _questionsService;
         private readonly IUserService _userService;
 
-        public QuestionsController(ILogger<QuestionsController> logger, IQuestionsService questionsService, IUserService userService)
+        public QuestionsController(ILogger<QuestionsController> logger, IQuestionsService questionsService,
+            IUserService userService)
         {
             _logger = logger;
             _questionsService = questionsService;
             _userService = userService;
         }
 
-        [HttpGet]
-        public IActionResult GetQuestions(string? search)
+        [HttpGet("tags")]
+        public IActionResult GetQuestionsTags()
         {
-            var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
-            var user = _userService.GetUserByEmail(userSessionEmail);
-
-            var questions = _questionsService.GetQuestions(search, user.Id);
-
-            return Ok(questions);
+            try
+            {
+                var tags = _questionsService.GetQuestionsTags();
+                return Ok(tags);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
 
         [HttpPost]
+        public IActionResult GetQuestions(QuestionSearchRequest searchParams)
+        {
+            try
+            {
+                var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
+                var user = _userService.GetUserByEmail(userSessionEmail);
+
+                var questions = _questionsService.GetQuestionsWithSearch(searchParams, user.Id);
+
+                return Ok(questions);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPost("add")]
         public IActionResult PostAddQuestion(RequestQuestion newQuestion)
         {
             try
@@ -50,7 +72,7 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpPut()]
+        [HttpPut("edit")]
         public async Task<IActionResult> UpdateQuestion(RequestQuestion updatedQuestion)
         {
             try
