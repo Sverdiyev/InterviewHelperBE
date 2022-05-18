@@ -57,7 +57,7 @@ public class QuestionsService : IQuestionsService
                         _.QuestionContent.ToLower().Contains(searchParams.Search) ||
                         _.Complexity.ToLower().Contains(searchParams.Search) ||
                         _.Tags.Any(_ => _.TagName.ToLower().Contains(searchParams.Search)))
-            .Where(_ => searchParams.Complexity == null || _.IsUserFavourite == searchParams.Favorite);
+            .Where(_ => searchParams.Favorite == null || _.IsUserFavourite );
 
 
         return filteredQuestions.OrderByDescending(_ => _.CreationDate);
