@@ -45,7 +45,6 @@ public class QuestionsService : IQuestionsService
         }
 
         var allQuestions = GetQuestionsWithTagsAndUserVoteAndUserFavourite(authenticatedUserId);
-        //TODO:  to add filter by Favorite once it is added
         var filteredQuestions = allQuestions
             .Where(_ => searchParams.Complexity == null || searchParams.Complexity.Contains(_.Complexity))
             .Where(_ => searchParams.Tags == null ||
@@ -57,7 +56,9 @@ public class QuestionsService : IQuestionsService
                         _.Note.ToLower().Contains(searchParams.Search) ||
                         _.QuestionContent.ToLower().Contains(searchParams.Search) ||
                         _.Complexity.ToLower().Contains(searchParams.Search) ||
-                        _.Tags.Any(_ => _.TagName.ToLower().Contains(searchParams.Search)));
+                        _.Tags.Any(_ => _.TagName.ToLower().Contains(searchParams.Search)))
+            .Where(_ => searchParams.Complexity == null || _.IsUserFavourite == searchParams.Favorite);
+
 
         return filteredQuestions.OrderByDescending(_ => _.CreationDate);
     }
@@ -69,7 +70,7 @@ public class QuestionsService : IQuestionsService
             return context.Tags.Where(_ => _.TagName != string.Empty).Select(_ => _.TagName).Distinct().ToList();
         }
     }
-    
+
     public async Task UpdateQuestion(RequestQuestion updatedQuestion)
     {
         using (var context = new InterviewHelperContext(_connectionString))
