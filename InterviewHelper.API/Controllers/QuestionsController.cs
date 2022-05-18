@@ -16,13 +16,15 @@ namespace InterviewHelper.Api.Controllers
     {
         private readonly ILogger<QuestionsController> _logger;
         private readonly IQuestionsService _questionsService;
+        private readonly IQuestionVoteService _questionVoteService;
         private readonly IUserService _userService;
 
         public QuestionsController(ILogger<QuestionsController> logger, IQuestionsService questionsService,
-            IUserService userService)
+            IQuestionVoteService questionVoteService, IUserService userService)
         {
             _logger = logger;
             _questionsService = questionsService;
+            _questionVoteService = questionVoteService;
             _userService = userService;
         }
 
@@ -114,7 +116,7 @@ namespace InterviewHelper.Api.Controllers
             var user = GetLoggedInUser();
             try
             {
-                _questionsService.UpVoteQuestion(questionId, user);
+                _questionVoteService.UpVoteQuestion(questionId, user);
                 return Ok();
             }
             catch (QuestionNotFoundException)
@@ -133,7 +135,7 @@ namespace InterviewHelper.Api.Controllers
             var user = GetLoggedInUser();
             try
             {
-                _questionsService.DownVoteQuestion(questionId, user);
+                _questionVoteService.DownVoteQuestion(questionId, user);
                 return Ok();
             }
             catch (QuestionNotFoundException)
@@ -152,7 +154,7 @@ namespace InterviewHelper.Api.Controllers
             var user = GetLoggedInUser();
             try
             {
-                _questionsService.DeleteUserVote(questionId, user);
+                _questionVoteService.DeleteUserVote(questionId, user);
                 return Ok();
             }
             catch (QuestionNotFoundException)
@@ -175,7 +177,7 @@ namespace InterviewHelper.Api.Controllers
             var user = GetLoggedInUser();
             try
             {
-                _questionsService.AddFavouriteQuestion(questionId, user);
+                _questionVoteService.AddFavouriteQuestion(questionId, user);
                 return Ok();
             }
             catch (QuestionNotFoundException)
@@ -194,7 +196,7 @@ namespace InterviewHelper.Api.Controllers
             var user = GetLoggedInUser();
             try
             {
-                _questionsService.DeleteFavouriteQuestion(questionId, user);
+                _questionVoteService.DeleteFavouriteQuestion(questionId, user);
                 return Ok();
             }
             catch (QuestionNotFoundException)
