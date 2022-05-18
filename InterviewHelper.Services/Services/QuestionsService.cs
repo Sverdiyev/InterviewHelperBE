@@ -258,7 +258,6 @@ public class QuestionsService : IQuestionsService
             if (favouriteExists != null)
             {
                 favouriteExists.IsUserFavourite = true;
-                context.SaveChanges();
             }
             else
             {
@@ -269,9 +268,9 @@ public class QuestionsService : IQuestionsService
                     IsUserFavourite = true
                 };
 
-                context.Favourites.Add(newUserFavourite);
-                context.SaveChanges();
+                questionToFavourite.Favourites.Add(newUserFavourite);
             }
+            context.SaveChanges();
         }
     }
 
@@ -279,15 +278,15 @@ public class QuestionsService : IQuestionsService
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
-            var questionToFavourite = context.Questions.FirstOrDefault(_ => _.Id == questionId);
-            if (questionToFavourite == null) throw new QuestionNotFoundException();
+            var questionToDeleteFavourite = context.Questions.FirstOrDefault(_ => _.Id == questionId);
+            if (questionToDeleteFavourite == null) throw new QuestionNotFoundException();
 
             var favouriteExists = context.Favourites.FirstOrDefault(_ =>
-                _.QuestionId == questionToFavourite.Id && _.UserId == authenticatedUser.Id);
+                _.QuestionId == questionToDeleteFavourite.Id && _.UserId == authenticatedUser.Id);
 
             if (favouriteExists == null) throw new FavouriteNotFoundException();
 
-            context.Favourites.Remove(favouriteExists);
+            questionToDeleteFavourite.Favourites.Remove(favouriteExists);
             context.SaveChanges();
         }
     }
