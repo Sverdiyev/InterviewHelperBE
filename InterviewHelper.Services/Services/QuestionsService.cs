@@ -3,7 +3,6 @@ using InterviewHelper.Core.Models;
 using InterviewHelper.Core.Models.RequestsModels;
 using InterviewHelper.Core.ServiceContracts;
 using InterviewHelper.DataAccess.Data;
-using InterviewHelper.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -37,16 +36,15 @@ public class QuestionsService : IQuestionsService
         }
     }
 
-    public IEnumerable<QuestionActionsModel> GetQuestions(string? rawSearchParam, int authenticatedUserId)
-    public IEnumerable<VotedQuestionModel> GetQuestionsWithSearch(QuestionSearchRequest searchParams,
+    public IEnumerable<QuestionActionsModel> GetQuestionsWithSearch(QuestionSearchRequest searchParams,
         int authenticatedUserId)
     {
         if (searchParams.IsEmpty)
         {
-            return GetQuestionsWithTagsAndUserVote(authenticatedUserId);
+            return GetQuestionsWithTagsAndUserVoteAndUserFavourite(authenticatedUserId);
         }
 
-        var allQuestions = GetQuestionsWithTagsAndUserVote(authenticatedUserId);
+        var allQuestions = GetQuestionsWithTagsAndUserVoteAndUserFavourite(authenticatedUserId);
         //TODO:  to add filter by Favorite once it is added
         var filteredQuestions = allQuestions
             .Where(_ => searchParams.Complexity == null || searchParams.Complexity.Contains(_.Complexity))
