@@ -10,12 +10,12 @@ public interface IQuestionsService
     Task UpdateQuestion(RequestQuestion updatedQuestion);
     void DeleteQuestion(int questionId);
     List<string> GetQuestionsByIds(List<int> questionIds);
-    void UpVoteQuestion(QuestionActionsRequest questionActions, User user);
-    void DownVoteQuestion(QuestionActionsRequest questionActions, User user);
-    void DeleteUserVote(QuestionActionsRequest questionActions, User user);
+    void UpVoteQuestion(int questionActions, User user);
+    void DownVoteQuestion(int questionActions, User user);
+    void DeleteUserVote(int questionId, User user);
     Question GetQuestionById(int questionId);
     public bool CheckIfQuestionExists(int questionId);
-    void AddFavouriteQuestion(QuestionActionsRequest questionActions, User user);
-    void DeleteFavouriteQuestion(QuestionActionsRequest questionActions, User user);
+    void AddFavouriteQuestion(int questionId, User user);
+    void DeleteFavouriteQuestion(int questionActions, User user);
 
 }
