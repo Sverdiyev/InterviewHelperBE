@@ -117,7 +117,7 @@ public class QuestionVoteService : IQuestionVoteService
                     IsUserFavourite = true
                 };
 
-                context.Favourites.Add(newUserFavourite);
+                questionToFavourite.Favourites.Add(newUserFavourite);
             }
 
             context.SaveChanges();
@@ -136,7 +136,7 @@ public class QuestionVoteService : IQuestionVoteService
 
             if (favouriteExists == null) throw new FavouriteNotFoundException();
 
-            context.Favourites.Remove(favouriteExists);
+            questionToDeleteFavourite.Favourites.Remove(favouriteExists);
             context.SaveChanges();
         }
     }
