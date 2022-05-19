@@ -10,4 +10,5 @@ public interface IUserService
     AuthenticateUserResponse AuthenticateUser(AuthenticateUserRequest user);
     User GetUserByEmail(string email);
     bool UserExists(int userId);
+    public User GetUserById(int id);
 }

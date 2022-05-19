@@ -70,4 +70,12 @@ public class UserRepository
             return context.Users.First(_ => _.Email == email);
         }
     }
+    
+    public User GetUser(int id)
+    {
+        using (var context = new InterviewHelperContext(_connectionString))
+        {
+            return context.Users.First(_ => _.Id == id);
+        }
+    }
 }

@@ -40,6 +40,7 @@ public class CommentService : ICommentService
         {
             CommentContent = newComment.CommentContent,
             UserId = newComment.UserId,
+            UserName = _userService.GetUserById(newComment.UserId).Name,
             QuestionId = newComment.QuestionId,
             CreationDate = newComment.CreationDate
         };

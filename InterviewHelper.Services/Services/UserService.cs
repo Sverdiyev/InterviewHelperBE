@@ -115,4 +115,9 @@ public class UserService : IUserService
     {
         return _userRepository.UserExists(userId);
     }
+
+    public User GetUserById(int id)
+    {
+        return _userRepository.GetUser(id);
+    }
 }
