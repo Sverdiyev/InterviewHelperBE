@@ -16,13 +16,15 @@ namespace InterviewHelper.Api.Controllers
     {
         private readonly ILogger<QuestionsController> _logger;
         private readonly IQuestionsService _questionsService;
+        private readonly IQuestionVoteService _questionVoteService;
         private readonly IUserService _userService;
 
         public QuestionsController(ILogger<QuestionsController> logger, IQuestionsService questionsService,
-            IUserService userService)
+            IQuestionVoteService questionVoteService, IUserService userService)
         {
             _logger = logger;
             _questionsService = questionsService;
+            _questionVoteService = questionVoteService;
             _userService = userService;
         }
 
@@ -108,14 +110,13 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpPost("Votes/Upvote")]
-        public IActionResult UpvoteQuestion(VoteRequest vote)
+        [HttpPost("votes/upvote")]
+        public IActionResult UpvoteQuestion([FromBody] int questionId)
         {
-            var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
-            var user = _userService.GetUserByEmail(userSessionEmail);
+            var user = GetLoggedInUser();
             try
             {
-                _questionsService.UpVoteQuestion(vote, user);
+                _questionVoteService.UpVoteQuestion(questionId, user);
                 return Ok();
             }
             catch (QuestionNotFoundException)
@@ -128,15 +129,13 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpPost("Votes/Downvote")]
-        public IActionResult DownvoteQuestion(VoteRequest vote)
+        [HttpPost("votes/downvote")]
+        public IActionResult DownvoteQuestion([FromBody] int questionId)
         {
-            var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
-            var user = _userService.GetUserByEmail(userSessionEmail);
-
+            var user = GetLoggedInUser();
             try
             {
-                _questionsService.DownVoteQuestion(vote, user);
+                _questionVoteService.DownVoteQuestion(questionId, user);
                 return Ok();
             }
             catch (QuestionNotFoundException)
@@ -149,15 +148,13 @@ namespace InterviewHelper.Api.Controllers
             }
         }
 
-        [HttpDelete("Votes")]
-        public IActionResult DeleteQuestionVote(VoteRequest vote)
+        [HttpDelete("votes")]
+        public IActionResult DeleteQuestionVote([FromBody] int questionId)
         {
-            var userSessionEmail = User.FindFirst(ClaimTypes.Email).Value;
-            var user = _userService.GetUserByEmail(userSessionEmail);
-
+            var user = GetLoggedInUser();
             try
             {
-                _questionsService.DeleteUserVote(vote, user);
+                _questionVoteService.DeleteUserVote(questionId, user);
                 return Ok();
             }
             catch (QuestionNotFoundException)
@@ -172,6 +169,53 @@ namespace InterviewHelper.Api.Controllers
             {
                 return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
+        }
+
+        [HttpPost("favourites/add")]
+        public IActionResult AddFavouriteQuestion([FromBody] int questionId)
+        {
+            var user = GetLoggedInUser();
+            try
+            {
+                _questionVoteService.AddFavouriteQuestion(questionId, user);
+                return Ok();
+            }
+            catch (QuestionNotFoundException)
+            {
+                return BadRequest(new {message = "Question not found"});
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpDelete("favourites")]
+        public IActionResult DeleteFavouriteQuestion([FromBody] int questionId)
+        {
+            var user = GetLoggedInUser();
+            try
+            {
+                _questionVoteService.DeleteFavouriteQuestion(questionId, user);
+                return Ok();
+            }
+            catch (QuestionNotFoundException)
+            {
+                return BadRequest(new {message = "Question not found"});
+            }
+            catch (FavouriteNotFoundException)
+            {
+                return BadRequest(new {message = "This question is not in user favourites"});
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        private User GetLoggedInUser()
+        {
+            return _userService.GetUserByEmail(User.FindFirst(ClaimTypes.Email).Value);
         }
     }
 }

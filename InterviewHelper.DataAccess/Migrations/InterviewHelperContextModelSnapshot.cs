@@ -50,6 +50,30 @@ namespace InterviewHelper.DataAccess.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("InterviewHelper.Core.Models.Favourite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("IsUserFavourite")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("Favourites");
+                });
+
             modelBuilder.Entity("InterviewHelper.Core.Models.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -134,15 +158,6 @@ namespace InterviewHelper.DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("InterviewHelper.Core.Models.Comment", b =>
-                {
-                    b.HasOne("InterviewHelper.Core.Models.Question", null)
-                        .WithMany("Comments")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("InterviewHelper.Core.Models.Vote", b =>
                 {
                     b.Property<int>("Id")
@@ -162,7 +177,27 @@ namespace InterviewHelper.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("QuestionId");
+
                     b.ToTable("Votes");
+                });
+
+            modelBuilder.Entity("InterviewHelper.Core.Models.Comment", b =>
+                {
+                    b.HasOne("InterviewHelper.Core.Models.Question", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("InterviewHelper.Core.Models.Favourite", b =>
+                {
+                    b.HasOne("InterviewHelper.Core.Models.Question", null)
+                        .WithMany("Favourites")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("InterviewHelper.Core.Models.Tag", b =>
@@ -174,11 +209,24 @@ namespace InterviewHelper.DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("InterviewHelper.Core.Models.Vote", b =>
+                {
+                    b.HasOne("InterviewHelper.Core.Models.Question", null)
+                        .WithMany("Votes")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("InterviewHelper.Core.Models.Question", b =>
                 {
                     b.Navigation("Comments");
 
+                    b.Navigation("Favourites");
+
                     b.Navigation("Tags");
+
+                    b.Navigation("Votes");
                 });
 #pragma warning restore 612, 618
         }

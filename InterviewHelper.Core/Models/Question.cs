@@ -12,5 +12,6 @@ namespace InterviewHelper.Core.Models
         public virtual IList<Tag> Tags { get; set; }
         public virtual IList<Comment> Comments { get; set; } 
         public virtual IList<Vote> Votes { get; set; }
+        public virtual IList<Favourite> Favourites { get; set; } = new List<Favourite>();
     }
 }

@@ -9,12 +9,8 @@ public interface IQuestionsService
     Task UpdateQuestion(RequestQuestion updatedQuestion);
     void DeleteQuestion(int questionId);
     List<string> GetQuestionsByIds(List<int> questionIds);
-    IEnumerable<VotedQuestionModel> GetQuestionsWithSearch(QuestionSearchRequest searchParams, int userId);
+    IEnumerable<QuestionActionsModel> GetQuestionsWithSearch(QuestionSearchRequest searchParams, int userId);
     List<string> GetQuestionsTags();
-    void UpVoteQuestion(VoteRequest vote, User user);
-    void DownVoteQuestion(VoteRequest vote, User user);
-    void DeleteUserVote(VoteRequest vote, User user);
     Question GetQuestionById(int questionId);
     public bool CheckIfQuestionExists(int questionId);
-
 }

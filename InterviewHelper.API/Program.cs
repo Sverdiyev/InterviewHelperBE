@@ -66,6 +66,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 builder.Services.AddScoped<IQuestionsService, QuestionsService>();
+builder.Services.AddScoped<IQuestionVoteService, QuestionVoteService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<CommentRepository>();

@@ -36,16 +36,15 @@ public class QuestionsService : IQuestionsService
         }
     }
 
-    public IEnumerable<VotedQuestionModel> GetQuestionsWithSearch(QuestionSearchRequest searchParams,
+    public IEnumerable<QuestionActionsModel> GetQuestionsWithSearch(QuestionSearchRequest searchParams,
         int authenticatedUserId)
     {
         if (searchParams.IsEmpty)
         {
-            return GetQuestionsWithTagsAndUserVote(authenticatedUserId);
+            return GetQuestionsWithTagsAndUserVoteAndUserFavourite(authenticatedUserId);
         }
 
-        var allQuestions = GetQuestionsWithTagsAndUserVote(authenticatedUserId);
-        //TODO:  to add filter by Favorite once it is added
+        var allQuestions = GetQuestionsWithTagsAndUserVoteAndUserFavourite(authenticatedUserId);
         var filteredQuestions = allQuestions
             .Where(_ => searchParams.Complexity == null || searchParams.Complexity.Contains(_.Complexity))
             .Where(_ => searchParams.Tags == null ||
@@ -57,9 +56,11 @@ public class QuestionsService : IQuestionsService
                         _.Note.ToLower().Contains(searchParams.Search) ||
                         _.QuestionContent.ToLower().Contains(searchParams.Search) ||
                         _.Complexity.ToLower().Contains(searchParams.Search) ||
-                        _.Tags.Any(_ => _.TagName.ToLower().Contains(searchParams.Search)));
+                        _.Tags.Any(_ => _.TagName.ToLower().Contains(searchParams.Search)))
+            .Where(_ => searchParams.Favorite == null || _.IsUserFavourite );
 
-        return filteredQuestions;
+
+        return filteredQuestions.OrderByDescending(_ => _.CreationDate);
     }
 
     public List<string> GetQuestionsTags()
@@ -69,7 +70,6 @@ public class QuestionsService : IQuestionsService
             return context.Tags.Where(_ => _.TagName != string.Empty).Select(_ => _.TagName).Distinct().ToList();
         }
     }
-
 
     public async Task UpdateQuestion(RequestQuestion updatedQuestion)
     {
@@ -93,14 +93,15 @@ public class QuestionsService : IQuestionsService
         }
     }
 
-    private IEnumerable<VotedQuestionModel> GetQuestionsWithTagsAndUserVote(int userId)
+    private IEnumerable<QuestionActionsModel> GetQuestionsWithTagsAndUserVoteAndUserFavourite(int userId)
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
             var questions = context.Questions.Include(_ => _.Tags)
                 .Include(_ => _.Votes)
+                .Include(_ => _.Favourites)
                 .ToList()
-                .Select(_ => new VotedQuestionModel
+                .Select(_ => new QuestionActionsModel
                 {
                     Id = _.Id,
                     Complexity = _.Complexity,
@@ -113,6 +114,9 @@ public class QuestionsService : IQuestionsService
                     UserVote = _.Votes.Any(_ => _.UserId == userId)
                         ? _.Votes.First(_ => _.UserId == userId).UserVote
                         : null,
+                    IsUserFavourite = _.Favourites.Any(_ => _.UserId == userId)
+                        ? _.Favourites.First(_ => _.UserId == userId).IsUserFavourite
+                        : false,
                 });
 
             return questions;
@@ -160,84 +164,5 @@ public class QuestionsService : IQuestionsService
         var question = context.Questions.FirstOrDefault(_ => _.Id == questionId);
 
         return question != null;
-    }
-
-    private void VoteQuestion(string userVote, VoteRequest vote, User authenticatedUser)
-    {
-        using (var context = new InterviewHelperContext(_connectionString))
-        {
-            var questionToVote = context.Questions.FirstOrDefault(_ => _.Id == vote.QuestionId);
-            if (questionToVote == null) throw new QuestionNotFoundException();
-
-            var voteExists = context.Votes.FirstOrDefault(_ =>
-                _.QuestionId == questionToVote.Id && _.UserId == authenticatedUser.Id);
-            if (voteExists != null)
-            {
-                if (voteExists.UserVote == userVote)
-                {
-                    return;
-                }
-
-                var voteValue = userVote == "up"
-                    ? questionToVote.Vote += 2
-                    : questionToVote.Vote -= 2;
-
-                voteExists.UserVote = userVote;
-
-                context.SaveChanges();
-            }
-            else
-            {
-                var newUserVote = new Vote
-                {
-                    QuestionId = vote.QuestionId,
-                    UserId = authenticatedUser.Id,
-                    UserVote = userVote
-                };
-
-                var voteValue = userVote == "up"
-                    ? questionToVote.Vote += 1
-                    : questionToVote.Vote -= 1;
-
-                context.Votes.Add(newUserVote);
-                context.SaveChanges();
-            }
-        }
-    }
-
-    public void DeleteUserVote(VoteRequest vote, User authenticatedUser)
-    {
-        using (var context = new InterviewHelperContext(_connectionString))
-        {
-            var questionToDeleteVote = context.Questions.FirstOrDefault(_ => _.Id == vote.QuestionId);
-            if (questionToDeleteVote == null)
-            {
-                throw new QuestionNotFoundException();
-            }
-
-            var voteExists = context.Votes.FirstOrDefault(_ =>
-                _.QuestionId == questionToDeleteVote.Id && _.UserId == authenticatedUser.Id);
-            if (voteExists == null)
-            {
-                throw new VoteNotFoundException();
-            }
-
-            var voteValue = voteExists.UserVote == "up"
-                ? questionToDeleteVote.Vote -= 1
-                : questionToDeleteVote.Vote += 1;
-
-            context.Votes.Remove(voteExists);
-            context.SaveChanges();
-        }
-    }
-
-    public void UpVoteQuestion(VoteRequest vote, User authenticatedUser)
-    {
-        VoteQuestion("up", vote, authenticatedUser);
-    }
-
-    public void DownVoteQuestion(VoteRequest vote, User authenticatedUser)
-    {
-        VoteQuestion("down", vote, authenticatedUser);
     }
 }
