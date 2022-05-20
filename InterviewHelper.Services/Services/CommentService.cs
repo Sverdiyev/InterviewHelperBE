@@ -10,23 +10,33 @@ public class CommentService : ICommentService
     private readonly CommentRepository _commentRepository;
     private readonly IQuestionsService _questionService;
     private readonly IUserService _userService;
-    
 
-    public CommentService(CommentRepository commentRepository, IQuestionsService questionService, IUserService userService)
+
+    public CommentService(CommentRepository commentRepository, IQuestionsService questionService,
+        IUserService userService)
     {
         _commentRepository = commentRepository;
         _questionService = questionService;
         _userService = userService;
     }
 
-    public List<Comment> GetAllQuestionComments(int questionId)
+    public IEnumerable<CommentResponse> GetAllQuestionComments(int questionId)
     {
         if (!_questionService.CheckIfQuestionExists(questionId))
         {
             throw new QuestionNotFoundException();
         }
 
-        var questionComments = _commentRepository.GetAllQuestionComments(questionId);
+        var questionComments = _commentRepository.GetAllQuestionComments(questionId)
+            .Select(_ => new CommentResponse
+            {
+                CommentContent = _.CommentContent,
+                CreationDate = _.CreationDate,
+                Id = _.Id,
+                QuestionId = _.QuestionId,
+                UserId = _.UserId,
+                UserName = _userService.GetUserById(_.UserId).Name
+            });
         return questionComments;
     }
 
@@ -36,11 +46,11 @@ public class CommentService : ICommentService
         {
             throw new UserNotFoundException();
         }
+
         var commentToAdd = new Comment
         {
             CommentContent = newComment.CommentContent,
             UserId = newComment.UserId,
-            UserName = _userService.GetUserById(newComment.UserId).Name,
             QuestionId = newComment.QuestionId,
             CreationDate = newComment.CreationDate
         };

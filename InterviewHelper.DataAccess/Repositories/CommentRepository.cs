@@ -14,7 +14,7 @@ public class CommentRepository
         _connectionString = config.Value.ConnectionString;
     }
 
-    public List<Comment> GetAllQuestionComments(int questionId)
+    public IEnumerable<Comment> GetAllQuestionComments(int questionId)
     {
         using (var context = new InterviewHelperContext(_connectionString))
         {
@@ -73,8 +73,9 @@ public class CommentRepository
             {
                 throw new CommentNotFoundException();
             }
+
             var commentOwnerId = context.Comments.Where(_ => _.Id == commentId).Select(_ => _.UserId).FirstOrDefault();
-            
+
             return context.Users.FirstOrDefault(_ => commentOwnerId == _.Id);
         }
     }
