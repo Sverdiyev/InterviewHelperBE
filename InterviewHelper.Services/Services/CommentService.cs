@@ -40,9 +40,9 @@ public class CommentService : ICommentService
         return questionComments;
     }
 
-    public Comment AddComment(CommentRequest newComment)
+    public Comment AddComment(CommentRequest newComment, int userId)
     {
-        if (!_userService.UserExists(newComment.UserId))
+        if (!_userService.UserExists(userId))
         {
             throw new UserNotFoundException();
         }
@@ -50,7 +50,7 @@ public class CommentService : ICommentService
         var commentToAdd = new Comment
         {
             CommentContent = newComment.CommentContent,
-            UserId = newComment.UserId,
+            UserId = userId,
             QuestionId = newComment.QuestionId,
             CreationDate = newComment.CreationDate
         };
