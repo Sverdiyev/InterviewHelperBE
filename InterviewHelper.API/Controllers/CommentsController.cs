@@ -43,15 +43,10 @@ namespace InterviewHelper.Api.Controllers
         [HttpPost("add")]
         public IActionResult AddComment(CommentRequest newComment)
         {
+            var user = GetLoggedInUser();
             try
             {
-                var sessionUserEmail = User.FindFirst(ClaimTypes.Email).Value;
-                if (_userService.GetUserByEmail(sessionUserEmail).Id != newComment.UserId)
-                {
-                    return BadRequest("User is not authorized to perform this action");
-                }
-
-                var response = _commentService.AddComment(newComment);
+                var response = _commentService.AddComment(newComment, user.Id);
                 return Ok(response);
             }
             catch (UserNotFoundException)
@@ -110,6 +105,10 @@ namespace InterviewHelper.Api.Controllers
             {
                 return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
             }
+        }
+        private User GetLoggedInUser()
+        {
+            return _userService.GetUserByEmail(User.FindFirst(ClaimTypes.Email).Value);
         }
     }
 }
