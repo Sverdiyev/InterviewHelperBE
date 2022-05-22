@@ -26,9 +26,9 @@ public class QuestionExportController : ControllerBase
     {
         try
         {
-            var questionsContent = _questionsService.GetQuestionsByIds(modelRequest.Questions);
+            var questions = _questionsService.GetQuestionsByIds(modelRequest.Questions);
 
-            if (questionsContent.Count == 0)
+            if (questions.Count == 0)
             {
                 return BadRequest(new {message = "No questions provided for the pdf"});
             }
@@ -37,7 +37,7 @@ public class QuestionExportController : ControllerBase
             {
                 InterviewDate = modelRequest.InterviewDate,
                 IntervieweePosition = modelRequest.IntervieweePosition,
-                Questions = questionsContent
+                Questions = questions
             };
 
             var html = RenderHtmlViewToString(model);
@@ -56,12 +56,12 @@ public class QuestionExportController : ControllerBase
     {
         var htmlPdf = System.IO.File.ReadAllText("../InterviewHelper.Core/Helper/PdfBaseTemplate.html",
             System.Text.Encoding.UTF8);
-        var questionItem = "<tr ><td valign={0} style={1}>{2}</td></tr>";
+        var questionItem = "<tr valign={0} style={1}><td >{2}</td><td text-align={4}>{3}</td><td></td></tr>";
         var questionsBlock = "";
 
         foreach (var question in model.Questions)
         {
-            questionsBlock += string.Format(questionItem, "top", "font-size:12px;", question);
+            questionsBlock += string.Format(questionItem, "top", "font-size:12px;", question.QuestionContent, question.Complexity, "center;");
         }
 
         htmlPdf = htmlPdf.Replace("{ZPXF88jaM2nFuBnhmXo0}", model.IntervieweePosition);

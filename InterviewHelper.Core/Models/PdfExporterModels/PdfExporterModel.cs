@@ -4,5 +4,5 @@ public class PdfExporterModel
 {
     public DateTime InterviewDate { get; set; }
     public string IntervieweePosition { get; set; }
-    public List<string> Questions { get; set; }
+    public List<Question> Questions { get; set; }
 }
