@@ -60,7 +60,7 @@ public class QuestionsService : IQuestionsService
             .Where(_ => searchParams.Favorite == null || _.IsUserFavourite );
 
 
-        return filteredQuestions.OrderByDescending(_ => _.CreationDate);
+        return filteredQuestions;
     }
 
     public List<string> GetQuestionsTags()
@@ -119,7 +119,7 @@ public class QuestionsService : IQuestionsService
                         : false,
                 });
 
-            return questions;
+            return questions.OrderByDescending(_ => _.CreationDate);
         }
     }
 
