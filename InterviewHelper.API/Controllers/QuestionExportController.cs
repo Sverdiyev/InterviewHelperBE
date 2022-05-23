@@ -43,7 +43,7 @@ public class QuestionExportController : ControllerBase
             var html = RenderHtmlViewToString(model);
             var ironPdfRender = new IronPdf.ChromePdfRenderer();
             using var pdfDoc = ironPdfRender.RenderHtmlAsPdf(html);
-            Response.Headers.Add("Content-Disposition", "attachment;filename=interview-questions.pdf");
+            //Response.Headers.Add("Content-Disposition", "attachment;filename=interview-questions.pdf");
             return File(pdfDoc.Stream.ToArray(), "application/pdf");
         }
         catch (Exception ex)
