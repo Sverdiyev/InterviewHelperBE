@@ -50,8 +50,8 @@ public class QuestionsService : IQuestionsService
             .Where(_ => searchParams.Tags == null ||
                         _.Tags.Any(tag => searchParams.Tags.Contains(tag.TagName)))
             .Where(_ => searchParams.HardToGoogle == null || _.HardToGoogle == searchParams.HardToGoogle)
-            .Where(_ => searchParams.Vote == null ||
-                        _.Vote > searchParams.Vote.Min() && _.Vote < searchParams.Vote.Max())
+            .Where(_ => searchParams.QuestionRating == null ||
+                        _.Vote > searchParams.QuestionRating.Min() && _.Vote < searchParams.QuestionRating.Max())
             .Where(_ => searchParams.Search == null ||
                         _.Note.ToLower().Contains(searchParams.Search) ||
                         _.QuestionContent.ToLower().Contains(searchParams.Search) ||
